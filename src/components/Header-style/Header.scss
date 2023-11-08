@@ -1,0 +1,157 @@
+// .header {
+//     top: 0;
+//     left: 0;
+//     right: 0;
+//     width: 100vw;
+//     &-above {
+//         height: 95px;
+//         width: 100%;
+//         padding: 15px calc(15px + 204px);
+//         display: flex;
+//         &__logo-box {
+//             &__img {
+//                 background-image: url("../../assets/header/logo_tuan_thanh-02_be52a273dda94c5cb9f64b90722f1f36.webp");
+//                 background-size: contain;
+//                 background-repeat: no-repeat;
+//                 background-position: center;
+//                 height: 68px;
+//                 width: 200px;
+//                 margin-top: -10px;
+//             }
+//         }
+//         &__search-box {
+//             display: flex;
+//             padding-top: 21px;
+//             &__form {
+//                 height: 40px;
+//                 font-size: 1.8rem !important;
+//                 width: 600px !important;
+//             }
+//             &__btn {
+//                 & > Button {
+//                     cursor: pointer;
+//                     padding: 8px 16px;
+//                     font-size: 1.3rem;
+//                     margin-top: 0;
+//                 }
+//             }
+//         }
+//         &__user-box {
+//             font-size: 1.6rem;
+//             padding: 25px 15px 0 15px;
+//             color: var(--primary-color);
+//             font-weight: 600;
+//         }
+//         &__cart-box {
+//             position: relative;
+//             cursor: pointer;
+//             &__icon {
+//                 font-size: 2rem;
+//             }
+//             &__quantity {
+//                 position: absolute;
+//                 font-weight: 600;
+//                 font-size: 1.1rem;
+//                 display: inline-block;
+//                 padding: 2px 7px;
+//                 background-color: red;
+//                 border-radius: 50%;
+//                 color: #fff;
+//                 top: 10px;
+//                 right: 0;
+//             }
+//         }
+//         &__admin {
+//             font-size: 2rem;
+//             padding: 20px 15px 0 15px;
+//             color: var(--primary-color);
+//             font-weight: 600;
+//             cursor: pointer;
+//         }
+//     }
+//     &-below {
+//         height: 45px;
+//         width: 100%;
+//         background-color: #006a27;
+//         &__all-category {
+//             line-height: 45px;
+//             font-size: 1.3rem;
+//             font-weight: 550;
+//             color: #fff;
+//             padding-left: 219px;
+//             cursor: pointer;
+//             position: relative;
+//             z-index: 1000;
+//             &__group {
+//                 width: 852px;
+//                 display: flex;
+//                 justify-content: space-between;
+//                 &-public {
+//                     display: block;
+//                     &:hover .header-below__submenu {
+//                         display: block;
+//                     }
+//                 }
+//             }
+//         }
+//         &__submenu {
+//             display: none;
+//             color: #000;
+//             width: 80%;
+//             background-color: #fff;
+//             z-index: 1000;
+//             &-list {
+//                 list-style-type: none;
+//                 border-left: 1px solid #ccc;
+//                 border-right: 1px solid #ccc;
+//                 width: 200px;
+//                 padding: 0;
+//             }
+//             &-item {
+//                 cursor: pointer;
+//                 border-bottom: 1px dashed #ccc;
+//                 padding-left: 20px;
+//                 &:hover {
+//                     background-color: var(--primary-color);
+//                     color: #fff;
+//                 }
+//                 &:hover .header-below__submenu-item__container {
+//                     display: block !important;
+//                 }
+//                 &__container {
+//                     position: absolute;
+//                     display: none !important;
+//                     background-color: #f1f1f1;
+//                     top: 45px;
+//                     left: 419px;
+//                     display: flex;
+//                     flex-wrap: wrap;
+//                     width: 55%;
+//                     height: 88%;
+//                 }
+//                 &__wrapper {
+//                     display: flex;
+//                 }
+//                 &__box {
+//                     flex: 1;
+//                     &__title {
+//                         padding-left: 40px;
+//                         font-size: 1.4rem;
+//                         color: var(--primary-color);
+//                     }
+//                     &__list {
+//                     }
+//                     &__item {
+//                         padding-left: 40px;
+//                         line-height: 40px;
+//                         font-size: 1.1rem;
+//                         color: #000;
+//                     }
+//                 }
+//             }
+//         }
+//     }
+//     &--padding {
+//         padding: 20px 12px;
+//     }
+// }
