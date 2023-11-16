@@ -1,6 +1,6 @@
 .login-component {
-    background: #007bff;
-    background: linear-gradient(to right, #0062e6, #33aeff);
+    background: #ff6a00;
+    background: linear-gradient(0deg, #ff6a00 0%, #ee0979 100%);
     height: 100vh;
     display: flex;
     margin: auto;
@@ -9,8 +9,8 @@
 .card-img-left {
     width: 45%;
     /* Link to your background image using in the property below! */
-    background-image: url("https://source.unsplash.com/WEQbe2jBg40/414x512");
-    background-size: cover;
+    background-image: url("https://static.vecteezy.com/system/resources/previews/010/895/986/non_2x/sport-motorbike-illustration-design-free-vector.jpg");
+    background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
 }
