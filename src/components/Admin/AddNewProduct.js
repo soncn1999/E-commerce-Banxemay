@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Sidebar, Header, Footer } from '../../pages/private';
-import { createNewProductApi, uploadImageProductApi } from '../../services/product';
+import { createNewProductApi, uploadImageProductApi, getListBrandApi } from '../../services/product';
 import Swal from 'sweetalert2';
 
 AddNewProduct.propTypes = {
@@ -9,6 +9,10 @@ AddNewProduct.propTypes = {
 };
 
 function AddNewProduct(props) {
+    useEffect(() => {
+        handleGetListBrand();
+    }, [])
+
     const [product, setProduct] = useState({
         title: "",
         description: "",
@@ -18,8 +22,20 @@ function AddNewProduct(props) {
         files: "",
     });
 
+    const [brand, setBrand] = useState([]);
+
+    const handleGetListBrand = async () => {
+        let response = await getListBrandApi();
+        if (response && response.success) {
+            const { data, success } = response;
+            setBrand(data);
+        }
+    }
+
     const handleSubmitForm = async () => {
         let { previewImgUrl, files, ...dataCopy } = product;
+
+        console.log('Check data copy >>> ', dataCopy);
 
         const response = await createNewProductApi(dataCopy);
         if (response && response.success) {
@@ -95,9 +111,20 @@ function AddNewProduct(props) {
                                 <label for="exampleInputPassword1">Description: </label>
                                 <input type="text" name="description" value={product.description} class="form-control" placeholder="Enter Product Description" onChange={(event) => setProduct({ ...product, [event.target.name]: event.target.value })} />
                             </div>
-                            <div class="form-group">
+                            {/* <div class="form-group">
                                 <label for="exampleInputPassword1">Brand: </label>
                                 <input type="text" name="brand" value={product.brand} class="form-control" placeholder="Enter Product Brand" onChange={(event) => setProduct({ ...product, [event.target.name]: event.target.value })} />
+                            </div> */}
+                            <div className="form-group">
+                                <label for="exampleInputEmail1">Brand: </label>
+                                <select class="form-select" aria-label="Default select example" name="brand" onChange={(event) => setProduct({ ...product, [event.target.name]: event.target.value })}>
+                                    <option selected value=''>Open this select menu</option>
+                                    {
+                                        brand && brand.length > 0 && brand.map((item) => {
+                                            return (<option value={item.title}>{item.title}</option>)
+                                        })
+                                    }
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputPassword1">Price: </label>

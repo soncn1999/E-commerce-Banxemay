@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Header, Footer } from '../../components';
 import { useParams } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './public-style/Detail.css';
-import { getDetailProductApi } from '../../services/product';
+import { getDetailProductApi, getListProductRelateBrandApi } from '../../services/product';
 import { updateCartApi } from '../../services/user';
 import { useSelector, useDispatch } from 'react-redux';
 import { changeUserCart } from '../../store/userSlice';
@@ -17,8 +18,10 @@ Detail.propTypes = {
 function Detail(props) {
     let { pid } = useParams();
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const userCart = useSelector((state) => state.user.current);
     const [detailProduct, setDetailProduct] = useState({});
+    const [relatedProduct, setRelatedProduct] = useState()
     useEffect(() => {
         getDetailProduct(pid);
     }, []);
@@ -28,6 +31,15 @@ function Detail(props) {
         if (response && response.success) {
             setDetailProduct(response.data);
         }
+        console.log(response.data.brand);
+        await getListProductRelatedBrand(response.data.brand);
+    }
+
+    const getListProductRelatedBrand = async (brand) => {
+        let response = await getListProductRelateBrandApi(brand);
+        const { product } = response;
+        setRelatedProduct(product);
+        console.log('check related product >>> ', product);
     }
 
     const handleAddAProduct = async (product) => {
@@ -61,14 +73,23 @@ function Detail(props) {
         }
     }
 
+    const handleAccessDetail = async (pid) => {
+        console.log('pid >>> ', pid);
+        navigate(`/products/${pid}`);
+        await getDetailProduct(pid);
+    }
+
     return (
         <div>
             <Header />
             {/* <!-- Product section--> */}
-            <section class="py-5" style={{ paddingTop: '150px' }}>
+            <section class="" style={{ paddingTop: '150px' }}>
                 <div class="container px-4 px-lg-5 my-5">
                     <div class="row gx-4 gx-lg-5 align-items-center">
-                        <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="https://dummyimage.com/600x700/dee2e6/6c757d.jpg" alt="..." /></div>
+                        <div class="col-md-6">
+                            <img class="card-img-top"
+                                src={detailProduct?.image?.length > 0 ? detailProduct?.image[0] : `https://dummyimage.com/450x300/dee2e6/6c757d.jpg`} alt="..." />
+                        </div>
                         <div class="col-md-6">
                             <div class="small mb-1">{detailProduct && detailProduct.brand}</div>
                             <h1 class="display-5 fw-bolder">{detailProduct && detailProduct.title}</h1>
@@ -88,6 +109,15 @@ function Detail(props) {
                                     Thêm vào giỏ hàng
                                 </div>
                             </div>
+
+                            {/* <div className="lead">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Comment</span>
+                                    </div>
+                                    <textarea class="form-control" aria-label="With textarea"></textarea>
+                                </div>
+                            </div> */}
                         </div>
                     </div>
                 </div>
@@ -95,106 +125,34 @@ function Detail(props) {
             {/* <!-- Related items section--> */}
             <section class="py-5 bg-light">
                 <div class="container px-4 px-lg-5 mt-5">
-                    <h2 class="fw-bolder mb-4">Related products</h2>
+                    <h2 class="fw-bolder mb-4">Sản phẩm liên quan</h2>
                     <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-                        <div class="col mb-5">
-                            <div class="card h-100">
-                                {/* <!-- Product image--> */}
-                                <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-                                {/* <!-- Product details--> */}
-                                <div class="card-body p-4">
-                                    <div class="text-center">
-                                        {/* <!-- Product name--> */}
-                                        <h5 class="fw-bolder">Fancy Product</h5>
-                                        {/* <!-- Product price--> */}
-                                        $40.00 - $80.00
-                                    </div>
-                                </div>
-                                {/* <!-- Product actions--> */}
-                                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                    <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View options</a></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col mb-5">
-                            <div class="card h-100">
-                                {/* <!-- Sale badge--> */}
-                                <div class="badge bg-dark text-white position-absolute" style={{ top: "0.5rem", right: "0.5rem" }}>Sale</div>
-                                {/* <!-- Product image--> */}
-                                <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-                                {/* <!-- Product details--> */}
-                                <div class="card-body p-4">
-                                    <div class="text-center">
-                                        {/* <!-- Product name--> */}
-                                        <h5 class="fw-bolder">Special Item</h5>
-                                        {/* <!-- Product reviews--> */}
-                                        <div class="d-flex justify-content-center small text-warning mb-2">
-                                            <div class="bi-star-fill"></div>
-                                            <div class="bi-star-fill"></div>
-                                            <div class="bi-star-fill"></div>
-                                            <div class="bi-star-fill"></div>
-                                            <div class="bi-star-fill"></div>
+                        {
+                            relatedProduct && relatedProduct?.length > 0 && relatedProduct.map((item) => {
+                                return (
+                                    <div class="col mb-5" key={item._id}>
+                                        <div class="card h-100">
+                                            {/* <!-- Product image--> */}
+                                            <img class="card-img-top"
+                                                src={item?.image?.length > 0 ? item?.image[0] : `https://dummyimage.com/450x300/dee2e6/6c757d.jpg`} alt="..." />
+                                            {/* <!-- Product details--> */}
+                                            <div class="card-body p-4">
+                                                <div class="text-center">
+                                                    {/* <!-- Product name--> */}
+                                                    <h5 class="fw-bolder" style={{ cursor: 'pointer' }} onClick={() => handleAccessDetail(item._id)}>{item.title}</h5>
+                                                    {/* <!-- Product price--> */}
+                                                    {item.price}
+                                                </div>
+                                            </div>
+                                            {/* <!-- Product actions--> */}
+                                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" onClick={() => handleAccessDetail(item._id)}>Xem sản phẩm</a></div>
+                                            </div>
                                         </div>
-                                        {/* <!-- Product price--> */}
-                                        <span class="text-muted text-decoration-line-through">$20.00</span>
-                                        $18.00
                                     </div>
-                                </div>
-                                {/* <!-- Product actions--> */}
-                                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                    <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col mb-5">
-                            <div class="card h-100">
-                                {/* <!-- Sale badge--> */}
-                                <div class="badge bg-dark text-white position-absolute" style={{ top: "0.5rem", right: "0.5rem" }}>Sale</div>
-                                {/* <!-- Product image--> */}
-                                <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-                                {/* <!-- Product details--> */}
-                                <div class="card-body p-4">
-                                    <div class="text-center">
-                                        {/* <!-- Product name--> */}
-                                        <h5 class="fw-bolder">Sale Item</h5>
-                                        {/* <!-- Product price--> */}
-                                        <span class="text-muted text-decoration-line-through">$50.00</span>
-                                        $25.00
-                                    </div>
-                                </div>
-                                {/* <!-- Product actions--> */}
-                                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                    <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col mb-5">
-                            <div class="card h-100">
-                                {/* <!-- Product image--> */}
-                                <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-                                {/* <!-- Product details--> */}
-                                <div class="card-body p-4">
-                                    <div class="text-center">
-                                        {/* <!-- Product name--> */}
-                                        <h5 class="fw-bolder">Popular Item</h5>
-                                        {/* <!-- Product reviews--> */}
-                                        <div class="d-flex justify-content-center small text-warning mb-2">
-                                            <div class="bi-star-fill"></div>
-                                            <div class="bi-star-fill"></div>
-                                            <div class="bi-star-fill"></div>
-                                            <div class="bi-star-fill"></div>
-                                            <div class="bi-star-fill"></div>
-                                        </div>
-                                        {/* <!-- Product price--> */}
-                                        $40.00
-                                    </div>
-                                </div>
-                                {/* <!-- Product actions--> */}
-                                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                    <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
-                                </div>
-                            </div>
-                        </div>
+                                )
+                            })
+                        }
                     </div>
                 </div>
             </section>

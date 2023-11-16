@@ -40,7 +40,6 @@ function Sidebar(props) {
             </li>
 
             {/* <!-- Divider --> */}
-            <hr class="sidebar-divider" />
             <div class="sidebar-heading">
                 Người dùng
             </div>
@@ -52,7 +51,9 @@ function Sidebar(props) {
                 <div class="collapse" id="submenu-title-1">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Thao tác:</h6>
-                        <Link class="collapse-item" to={path.LIST_USERS}>Xem danh sách</Link>
+                        <Link class="collapse-item" to={path.LIST_USERS}>Quản lý DS User</Link>
+                        <Link class="collapse-item" to={path.LIST_USERS_ADMIN}>Quản lý DS Admin</Link>
+                        <Link class="collapse-item" to={path.LIST_USERS_BLOCK}>Quản lý DS bị khóa</Link>
                     </div>
                 </div>
             </li>
@@ -92,23 +93,71 @@ function Sidebar(props) {
                     </div>
                 </div>
             </li>
-            {/* <li class="nav-item">
-                        <div class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-                            aria-expanded="true" aria-controls="collapseUtilities" style={{ cursor: 'pointer' }}>
-                            <i class="fas fa-fw fa-wrench"></i>
-                            <span>Cấp quyền</span>
-                        </div>
-                        <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
-                            data-parent="#accordionSidebar">
-                            <div class="bg-white py-2 collapse-inner rounded">
-                                <h6 class="collapse-header">Custom Utilities:</h6>
-                                <a class="collapse-item" href="utilities-color.html">Colors</a>
-                                <a class="collapse-item" href="utilities-border.html">Borders</a>
-                                <a class="collapse-item" href="utilities-animation.html">Animations</a>
-                                <a class="collapse-item" href="utilities-other.html">Other</a>
-                            </div>
-                        </div>
-                    </li> */}
+            <hr class="sidebar-divider" />
+
+            <div class="sidebar-heading">
+                Thể loại sản phẩm
+            </div>
+            <li class="nav-item">
+                <div class="nav-link collapsed" style={{ cursor: 'pointer' }} id="menu-title-4" onClick={() => handleToggle('menu-title-4')}>
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Chỉnh sửa thông tin</span>
+                </div>
+                <div class="collapse" id="submenu-title-4">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Thao tác:</h6>
+                        <Link to={`${path.ADD_CATEGORY}`} class="collapse-item" style={{ cursor: 'pointer' }}>
+                            Thêm mới Thể loại
+                        </Link>
+
+                        <Link to={`${path.LIST_CATEGORY}`} class="collapse-item" style={{ cursor: 'pointer' }}>
+                            Quản lý danh sách
+                        </Link>
+                    </div>
+                </div>
+            </li>
+            <hr class="sidebar-divider" />
+
+            <div class="sidebar-heading">
+                Hãng sản xuất
+            </div>
+            <li class="nav-item">
+                <div class="nav-link collapsed" style={{ cursor: 'pointer' }} id="menu-title-5" onClick={() => handleToggle('menu-title-5')}>
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Chỉnh sửa thông tin</span>
+                </div>
+                <div class="collapse" id="submenu-title-5">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Thao tác:</h6>
+                        <Link to={`${path.ADD_BRAND}`} class="collapse-item" style={{ cursor: 'pointer' }}>
+                            Thêm mới hãng sản xuất
+                        </Link>
+
+                        <Link to={`${path.LIST_BRAND}`} class="collapse-item" style={{ cursor: 'pointer' }}>
+                            Quản lý danh sách
+                        </Link>
+                    </div>
+                </div>
+            </li>
+            <hr class="sidebar-divider" />
+
+            <div class="sidebar-heading">
+                Đơn hàng
+            </div>
+            <li class="nav-item">
+                <div class="nav-link collapsed" style={{ cursor: 'pointer' }} id="menu-title-6" onClick={() => handleToggle('menu-title-6')}>
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Quản lý đơn hàng</span>
+                </div>
+                <div class="collapse" id="submenu-title-6">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Thao tác:</h6>
+                        <Link to={`${path.LIST_PRODUCTS}`} class="collapse-item" style={{ cursor: 'pointer' }}>
+                            Quản lý danh sách
+                        </Link>
+                    </div>
+                </div>
+            </li>
             <hr class="sidebar-divider" />
         </ul>
     );

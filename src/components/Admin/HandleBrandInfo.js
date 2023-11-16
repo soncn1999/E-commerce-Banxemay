@@ -1,29 +1,29 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { getAllProductApi } from '../../services/product';
-import ModalEditProduct from './ModalEditProduct';
+import { getListBrandApi, handleDeleteBrandApi } from '../../services/product';
+import ModalEditBrand from './ModalEditBrand';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { deleteProductApi } from '../../services/product';
 import Swal from 'sweetalert2';
 
-HandleProductInfo.propTypes = {
+
+HandleBrandInfo.propTypes = {
 
 };
 
-function HandleProductInfo(props) {
-    const [listProduct, setListProduct] = useState({});
+function HandleBrandInfo(props) {
+    const [brand, setBrand] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editId, setEditId] = useState('');
+
     useEffect(() => {
-        getAllProduct(1);
+        getListBrand();
     }, []);
 
-    const getAllProduct = async (pageNumber) => {
-        let response = await getAllProductApi(pageNumber);
-        console.log('check list product >>> ', response);
+    const getListBrand = async () => {
+        let response = await getListBrandApi();
         if (response && response.success) {
-            let { success, ...productCopy } = response;
-            setListProduct(productCopy);
+            let { data } = response;
+            setBrand(data);
         }
     }
 
@@ -34,9 +34,10 @@ function HandleProductInfo(props) {
 
     const handleIsOpenned = async (data) => {
         setIsModalOpen(false);
+        await getListBrand();
     }
 
-    const handleDeleteProduct = async (id) => {
+    const handleDeleteBrand = async (id) => {
         if (id) {
             const swalWithBootstrapButtons = Swal.mixin({
                 customClass: {
@@ -55,13 +56,14 @@ function HandleProductInfo(props) {
                 reverseButtons: true
             }).then(async (result) => {
                 if (result.isConfirmed) {
-                    const response = await deleteProductApi(id);
+                    const response = await handleDeleteBrandApi(id);
                     if (response && response.success) {
                         swalWithBootstrapButtons.fire({
                             title: "Deleted!",
                             text: "Your file has been deleted.",
                             icon: "success"
                         });
+                        await getListBrand();
                     } else {
                         swalWithBootstrapButtons.fire({
                             title: "Oops",
@@ -89,37 +91,29 @@ function HandleProductInfo(props) {
                 <tr>
                     <th scope="col">STT</th>
                     <th scope="col">Title</th>
-                    <th scope="col">Brand</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Sold</th>
                     <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
                 {
-                    listProduct && listProduct.product?.length > 0 && listProduct.product.map((item, index) => {
+                    brand && brand?.length > 0 && brand.map((item, index) => {
                         return (
-                            <Fragment>
-                                <tr key={item._id}>
-                                    <th scope="row">{index + 1}</th>
-                                    <td scope="row">{item.title}</td>
-                                    <td scope="row">{item.brand}</td>
-                                    <td scope="row">{item.price}</td>
-                                    <td scope="row">{item.sold}</td>
-                                    <td scope="row">
-                                        <Button color="info" style={{ marginTop: 0 }} onClick={() => handleOpenModal(item._id)}>
-                                            <i class="fa-solid fa-pen-to-square"></i>
-                                        </Button>
-                                        {
-                                            editId && isModalOpen && <ModalEditProduct handleIsOpenned={handleIsOpenned} editId={editId} />
-                                        }
-                                        <button style={{ marginTop: '5px' }} type="button" class="btn btn-danger" onClick={() => handleDeleteProduct(item._id)}>
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </Fragment>
-                        )
+                            <tr key={item._id}>
+                                <td>{index + 1}</td>
+                                <td>{item.title}</td>
+                                <td scope="row">
+                                    <Button color="info" style={{ marginTop: 0 }} onClick={() => handleOpenModal(item._id)}>
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </Button>
+                                    {
+                                        editId && isModalOpen && <ModalEditBrand handleIsOpenned={handleIsOpenned} editId={editId} />
+                                    }
+                                    <button style={{ marginTop: '5px' }} type="button" class="btn btn-danger" onClick={() => handleDeleteBrand(item._id)}>
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        );
                     })
                 }
             </tbody>
@@ -127,4 +121,4 @@ function HandleProductInfo(props) {
     );
 }
 
-export default HandleProductInfo;
+export default HandleBrandInfo;

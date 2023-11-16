@@ -1,0 +1,19 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10px;
+}
+
+:root {
+  --primary-color: #006a27;
+}
+
+.app-container {
+  padding: 0;
+  margin: 0;
+}/*# sourceMappingURL=Style.css.map */

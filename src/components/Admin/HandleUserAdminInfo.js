@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { getListCurrentUserApi } from '../../services/user';
-import { Button } from 'reactstrap';
-import { handleBlockUserApi } from '../../services/user';
 import Swal from 'sweetalert2';
+import { handleBlockUserApi } from '../../services/user';
+import { Button } from 'reactstrap';
+import './Search-Style/style.scss';
 
-HandleUserInfo.propTypes = {
+HandleUserAdminInfo.propTypes = {
 
 };
 
-function HandleUserInfo(props) {
+function HandleUserAdminInfo(props) {
     const [listUser, setListUser] = useState([]);
     const [userFindingResult, setUserFindingResult] = useState([]);
-
     useEffect(() => {
         getListCurrentUser();
     }, []);
@@ -57,7 +57,6 @@ function HandleUserInfo(props) {
                 Swal.fire("Changes are not saved", "", "info");
             }
         });
-
     }
 
     const handleSearchUser = (data) => {
@@ -128,9 +127,9 @@ function HandleUserInfo(props) {
                                                     {item.role == 'admin' ? <strong style={{ color: 'red' }}>{item.role}</strong> : <span>{item.role}</span>}
                                                 </td>
                                                 <td>{
-                                                    !item.isBlocked ? (<Button color="danger" style={{ marginTop: 0 }} onClick={() => handleBlockUser(item._id)}>
+                                                    item.isBlocked ? (<strong>Blocked</strong>) : (<Button color="danger" style={{ marginTop: 0 }} onClick={() => handleBlockUser(item._id)}>
                                                         <i class="fa-solid fa-lock"></i>
-                                                    </Button>) : (<strong>Blocked</strong>)
+                                                    </Button>)
                                                 }
                                                 </td>
                                             </tr>
@@ -158,9 +157,9 @@ function HandleUserInfo(props) {
                 <tbody>
                     {
                         listUser && listUser.length > 0 && listUser.map((item, index) => {
-                            if (item.role !== 'admin' && item.isBlocked == false) {
+                            if (item.role === 'admin' && item.isBlocked == false) {
                                 return (
-                                    <tr key={item._id}>
+                                    <tr key={item.id}>
                                         <th scope="row">{index + 1}</th>
                                         <td>{item.firstname} {item.lastname}</td>
                                         <td>{item.email}</td>
@@ -182,4 +181,4 @@ function HandleUserInfo(props) {
     );
 }
 
-export default HandleUserInfo;
+export default HandleUserAdminInfo;

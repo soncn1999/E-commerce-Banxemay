@@ -63,7 +63,23 @@ const updateCartEditDetailApi = (data) => axios({
     data: data
 });
 
+const handleBlockUserApi = (data) => axios({
+    url: `/user/blockuser/${data}`,
+    method: 'put',
+});
+
+const handleRemoveBlockUserApi = (data) => axios({
+    url: `/user/removeblockuser/${data}`,
+    method: 'put',
+});
+
+const handleGetListBlockUserApi = () => axios({
+    url: '/user/getlistblockuser',
+    method: 'get'
+})
+
 export {
     userRegisterApi, userLoginApi, getCurrentUserApi, getAllCoupons, getListOrderApi,
-    updateCartApi, removeCartApi, updateCartEditDetailApi, changeUserRoleApi, getListCurrentUserApi, userLogoutApi
+    updateCartApi, removeCartApi, updateCartEditDetailApi, changeUserRoleApi, getListCurrentUserApi,
+    userLogoutApi, handleBlockUserApi, handleRemoveBlockUserApi, handleGetListBlockUserApi
 }

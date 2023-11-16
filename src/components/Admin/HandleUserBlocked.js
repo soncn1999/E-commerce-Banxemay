@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { getListCurrentUserApi } from '../../services/user';
-import { Button } from 'reactstrap';
-import { handleBlockUserApi } from '../../services/user';
 import Swal from 'sweetalert2';
+import { handleRemoveBlockUserApi } from '../../services/user';
+import { Button } from 'reactstrap';
 
-HandleUserInfo.propTypes = {
+HandleUserBlocked.propTypes = {
 
 };
 
-function HandleUserInfo(props) {
+function HandleUserBlocked(props) {
     const [listUser, setListUser] = useState([]);
     const [userFindingResult, setUserFindingResult] = useState([]);
 
@@ -19,6 +19,7 @@ function HandleUserInfo(props) {
 
     const getListCurrentUser = async () => {
         let response = await getListCurrentUserApi();
+        console.log('List User Admin Page >>> ', response);
         if (response && response.success) {
             setListUser(response.data);
         }
@@ -26,20 +27,20 @@ function HandleUserInfo(props) {
 
     const handleBlockUser = async (id) => {
         Swal.fire({
-            title: "Do you want to block this user?",
+            title: "Do you want to remove block this user?",
             showDenyButton: true,
             showCancelButton: true,
             confirmButtonText: "Yes",
-            denyButtonText: `Don't block`
+            denyButtonText: `Don't remove block`
         }).then(async (result) => {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
-                let response = await handleBlockUserApi(id);
+                let response = await handleRemoveBlockUserApi(id);
                 if (response && response.success) {
                     Swal.fire({
                         position: "top-end",
                         icon: "success",
-                        title: "This user has blocked",
+                        title: "This user has removed block",
                         showConfirmButton: false,
                         timer: 1500
                     });
@@ -57,7 +58,6 @@ function HandleUserInfo(props) {
                 Swal.fire("Changes are not saved", "", "info");
             }
         });
-
     }
 
     const handleSearchUser = (data) => {
@@ -128,9 +128,9 @@ function HandleUserInfo(props) {
                                                     {item.role == 'admin' ? <strong style={{ color: 'red' }}>{item.role}</strong> : <span>{item.role}</span>}
                                                 </td>
                                                 <td>{
-                                                    !item.isBlocked ? (<Button color="danger" style={{ marginTop: 0 }} onClick={() => handleBlockUser(item._id)}>
-                                                        <i class="fa-solid fa-lock"></i>
-                                                    </Button>) : (<strong>Blocked</strong>)
+                                                    !item.isBlocked ? (<strong>Active</strong>) : (<Button color="success" style={{ marginTop: 0 }} onClick={() => handleBlockUser(item._id)}>
+                                                        <i class="fa-solid fa-unlock"></i>
+                                                    </Button>)
                                                 }
                                                 </td>
                                             </tr>
@@ -158,17 +158,17 @@ function HandleUserInfo(props) {
                 <tbody>
                     {
                         listUser && listUser.length > 0 && listUser.map((item, index) => {
-                            if (item.role !== 'admin' && item.isBlocked == false) {
+                            if (item.isBlocked == true) {
                                 return (
-                                    <tr key={item._id}>
+                                    <tr key={item.id}>
                                         <th scope="row">{index + 1}</th>
                                         <td>{item.firstname} {item.lastname}</td>
                                         <td>{item.email}</td>
                                         <td>{item.mobile}</td>
                                         <td>{item.role}</td>
                                         <td>
-                                            <Button color="danger" style={{ marginTop: 0 }} onClick={() => handleBlockUser(item._id)}>
-                                                <i class="fa-solid fa-lock"></i>
+                                            <Button color="primary" style={{ marginTop: 0 }} onClick={() => handleBlockUser(item._id)}>
+                                                <i class="fa-solid fa-unlock"></i>
                                             </Button>
                                         </td>
                                     </tr>
@@ -182,4 +182,4 @@ function HandleUserInfo(props) {
     );
 }
 
-export default HandleUserInfo;
+export default HandleUserBlocked;

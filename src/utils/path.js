@@ -13,7 +13,13 @@ const path = {
     LIST_USERS: 'list-users',
     LIST_PRODUCTS: 'list-products',
     PRODUCT_ADD: 'product-add',
-    ADD_SYS_USER: 'add-system-user'
+    ADD_SYS_USER: 'add-system-user',
+    ADD_BRAND: 'add-brand',
+    ADD_CATEGORY: 'add-category',
+    LIST_CATEGORY: 'list-category',
+    LIST_USERS_ADMIN: 'list-users-admin',
+    LIST_USERS_BLOCK: 'list-users-block',
+    LIST_BRAND: 'list-brand',
 }
 
 export default path;
