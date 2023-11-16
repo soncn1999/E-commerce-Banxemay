@@ -79,31 +79,44 @@ function Cart(props) {
         let { _id, color } = cartArrCopy[index];
         let product_id = cartArrCopy[index].product._id;
 
-        console.log('check cart item >>>> ', cartArrCopy[index], 'product >>> ', product_id);
+        console.log('check cart ITEM >>>> ', cartArrCopy[index], 'product >>> ', product_id);
+
+        const productQuantity = cartArrCopy[index].product.quantity;
 
         if (cartArrCopy.length > 0) {
             let cartArrItem = { ...cartArrCopy[index] };
             let quantityTemp = cartArrItem.quantity;
             quantityTemp = quantityTemp + operator;
-            cartArrItem.quantity = quantityTemp;
 
-            cartArrCopy.splice(index, 1, cartArrItem);
+            if (quantityTemp <= productQuantity) {
+                cartArrItem.quantity = quantityTemp;
 
-            setUserCart(cartArrCopy);
+                cartArrCopy.splice(index, 1, cartArrItem);
 
-            let response = await updateCartEditDetailApi({
-                _id: _id,
-                product: product_id,
-                quantity: quantityTemp,
-                color: color
-            });
+                setUserCart(cartArrCopy);
 
-            console.log('check response update cart item >>> ', response);
+                let response = await updateCartEditDetailApi({
+                    _id: _id,
+                    product: product_id,
+                    quantity: quantityTemp,
+                    color: color
+                });
 
-            // if (response && response.success) {
-            //     dispatch(changeUserCart(cartArrCopy));
-            // }
-            dispatch(changeUserCart(cartArrCopy));
+                console.log('check response update cart item >>> ', response);
+
+                // if (response && response.success) {
+                //     dispatch(changeUserCart(cartArrCopy));
+                // }
+                dispatch(changeUserCart(cartArrCopy));
+            } else {
+                Swal.fire({
+                    position: "top-end",
+                    icon: "warning",
+                    title: "Quá số lượng đặt hàng!",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
         }
 
         //Caculate at Front-end
@@ -118,6 +131,7 @@ function Cart(props) {
         }, 0);
 
         setTotalPayment(totalPaymentResult);
+
     }
 
     //Remove products in a cart

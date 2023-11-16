@@ -136,7 +136,7 @@ function Header(props) {
                             <div className="header-bellow__icon cart--color"><BsCartFill /></div>
                             <div className="header-bellow__content">
                                 <div className="header-bellow__content-title cart--title">GIỎ HÀNG</div>
-                                <div className="header-bellow__content-desc">{userCurrent && userCurrent?.current && userCurrent.current?.cart.length} chiếc</div>
+                                <div className="header-bellow__content-desc">{userCurrent && userCurrent?.current && userCurrent.current?.cart.length} sản phẩm</div>
                             </div>
                         </div>
                     </div>

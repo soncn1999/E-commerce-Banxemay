@@ -31,7 +31,7 @@ function Detail(props) {
         if (response && response.success) {
             setDetailProduct(response.data);
         }
-        console.log(response.data.brand);
+        console.log(response.data);
         await getListProductRelatedBrand(response.data.brand);
     }
 
@@ -39,7 +39,6 @@ function Detail(props) {
         let response = await getListProductRelateBrandApi(brand);
         const { product } = response;
         setRelatedProduct(product);
-        console.log('check related product >>> ', product);
     }
 
     const handleAddAProduct = async (product) => {
@@ -74,7 +73,6 @@ function Detail(props) {
     }
 
     const handleAccessDetail = async (pid) => {
-        console.log('pid >>> ', pid);
         navigate(`/products/${pid}`);
         await getDetailProduct(pid);
     }

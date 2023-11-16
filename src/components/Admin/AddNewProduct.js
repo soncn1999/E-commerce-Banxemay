@@ -31,6 +31,7 @@ function AddNewProduct(props) {
         price: 0,
         previewImgUrl: "",
         files: "",
+        quantity: 0,
     });
 
     const [brand, setBrand] = useState([]);
@@ -86,6 +87,7 @@ function AddNewProduct(props) {
                 price: 0,
                 previewImgUrl: "",
                 files: "",
+                quantity: 0
             });
         } else {
             Swal.fire({
@@ -149,8 +151,11 @@ function AddNewProduct(props) {
                                 <input type="text" name="price" value={product.price} class="form-control" placeholder="Enter Product Price" onChange={(event) => setProduct({ ...product, [event.target.name]: event.target.value })} />
                             </div>
                             <div class="form-group">
+                                <label for="exampleInputPassword1">Quantity: </label>
+                                <input type="text" name="quantity" value={product.quantity} class="form-control" placeholder="Enter Product Quantity" onChange={(event) => setProduct({ ...product, [event.target.name]: event.target.value })} />
+                            </div>
+                            <div class="form-group">
                                 <label for="exampleInputPassword1">Description: </label>
-                                {/* <input type="text" name="description" value={product.description} class="form-control" placeholder="Enter Product Description" onChange={(event) => setProduct({ ...product, [event.target.name]: event.target.value })} /> */}
                                 <MdEditor style={{ height: '500px' }} renderHTML={text => mdParser.render(text)} onChange={handleEditorChange} />
                             </div>
                             <div class="form-group">

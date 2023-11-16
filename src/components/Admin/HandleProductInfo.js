@@ -104,6 +104,7 @@ function HandleProductInfo(props) {
                         <th scope="col">Title</th>
                         <th scope="col">Brand</th>
                         <th scope="col">Price</th>
+                        <th scope="col">Quantity</th>
                         <th scope="col">Sold</th>
                         <th scope="col">Action</th>
                     </tr>
@@ -118,6 +119,7 @@ function HandleProductInfo(props) {
                                         <td scope="row">{item.title}</td>
                                         <td scope="row">{item.brand}</td>
                                         <td scope="row">{item.price}</td>
+                                        <td scope="row">{item.quantity}</td>
                                         <td scope="row">{item.sold}</td>
                                         <td scope="row">
                                             <Button color="info" style={{ marginTop: 0 }} onClick={() => handleOpenModal(item._id)}>

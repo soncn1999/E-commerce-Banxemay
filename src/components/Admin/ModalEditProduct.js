@@ -42,8 +42,8 @@ function ModalEditProduct(props) {
             let { title,
                 description,
                 brand,
-                price } = response.data;
-            setProduct({ title, description, brand, price });
+                price, quantity } = response.data;
+            setProduct({ title, description, brand, price, quantity });
             setDescription(description);
         }
     }
@@ -110,6 +110,10 @@ function ModalEditProduct(props) {
                         <div class="form-group">
                             <label for="exampleInputPassword1">Price: </label>
                             <input type="text" value={product.price} name="price" class="form-control" onChange={(event) => setProduct({ ...product, [event.target.name]: event.target.value })} />
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Quantity: </label>
+                            <input type="text" value={product.quantity} name="quantity" class="form-control" onChange={(event) => setProduct({ ...product, [event.target.name]: event.target.value })} />
                         </div>
                         <div class="form-group">
                             <label for="exampleInputPassword1">Description: </label>
