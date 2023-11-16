@@ -4,6 +4,17 @@ import { Sidebar, Header, Footer } from '../../pages/private';
 import { createNewProductApi, uploadImageProductApi, getListBrandApi } from '../../services/product';
 import Swal from 'sweetalert2';
 
+import MarkdownIt from 'markdown-it';
+import MdEditor from 'react-markdown-editor-lite';
+// import style manually
+import 'react-markdown-editor-lite/lib/index.css';
+
+// Register plugins if required
+// MdEditor.use(YOUR_PLUGINS_HERE);
+
+// Initialize a markdown parser
+const mdParser = new MarkdownIt(/* Markdown-it options */);
+
 AddNewProduct.propTypes = {
 
 };
@@ -51,11 +62,19 @@ function AddNewProduct(props) {
                     showConfirmButton: false,
                     timer: 1500
                 });
+                setProduct({
+                    title: "",
+                    description: "",
+                    brand: "",
+                    price: 0,
+                    previewImgUrl: "",
+                    files: "",
+                });
             } else {
                 Swal.fire({
                     position: "top-end",
                     icon: "warning",
-                    title: "Ảnh chưa được !",
+                    title: "Ảnh chưa được tải lên!",
                     showConfirmButton: false,
                     timer: 1500
                 });
@@ -96,6 +115,13 @@ function AddNewProduct(props) {
         }
     }
 
+    // Finish!
+    function handleEditorChange({ html, text }) {
+        console.log('handleEditorChange >>>', html);
+        let productCopy = { ...product };
+        productCopy.description = html;
+        setProduct(productCopy);
+    }
 
     return (
         <div>
@@ -107,14 +133,6 @@ function AddNewProduct(props) {
                                 <label for="exampleInputEmail1">Title: </label>
                                 <input type="text" name="title" value={product.title} class="form-control" placeholder="Enter Product Title" onChange={(event) => setProduct({ ...product, [event.target.name]: event.target.value })} />
                             </div>
-                            <div class="form-group">
-                                <label for="exampleInputPassword1">Description: </label>
-                                <input type="text" name="description" value={product.description} class="form-control" placeholder="Enter Product Description" onChange={(event) => setProduct({ ...product, [event.target.name]: event.target.value })} />
-                            </div>
-                            {/* <div class="form-group">
-                                <label for="exampleInputPassword1">Brand: </label>
-                                <input type="text" name="brand" value={product.brand} class="form-control" placeholder="Enter Product Brand" onChange={(event) => setProduct({ ...product, [event.target.name]: event.target.value })} />
-                            </div> */}
                             <div className="form-group">
                                 <label for="exampleInputEmail1">Brand: </label>
                                 <select class="form-select" aria-label="Default select example" name="brand" onChange={(event) => setProduct({ ...product, [event.target.name]: event.target.value })}>
@@ -129,6 +147,11 @@ function AddNewProduct(props) {
                             <div class="form-group">
                                 <label for="exampleInputPassword1">Price: </label>
                                 <input type="text" name="price" value={product.price} class="form-control" placeholder="Enter Product Price" onChange={(event) => setProduct({ ...product, [event.target.name]: event.target.value })} />
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Description: </label>
+                                {/* <input type="text" name="description" value={product.description} class="form-control" placeholder="Enter Product Description" onChange={(event) => setProduct({ ...product, [event.target.name]: event.target.value })} /> */}
+                                <MdEditor style={{ height: '500px' }} renderHTML={text => mdParser.render(text)} onChange={handleEditorChange} />
                             </div>
                             <div class="form-group">
                                 <label for="image-product-upload">Image Illustration: </label>

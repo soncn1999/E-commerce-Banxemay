@@ -99,7 +99,7 @@ function Detail(props) {
                                 <span>{detailProduct && formatter.format(detailProduct.price)}</span>
                             </div>
                             <p class="lead">
-                                {detailProduct && detailProduct.description}
+                                <div dangerouslySetInnerHTML={{ __html: detailProduct.description }} />
                             </p>
                             <div class="d-flex">
                                 {/* <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1" style={{ maxWidth: "3rem" }} /> */}

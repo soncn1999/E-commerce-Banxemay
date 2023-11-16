@@ -1,8 +1,19 @@
 import PropTypes from 'prop-types';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { getDetailProductApi, updateProductApi } from '../../services/product';
 import Swal from 'sweetalert2';
+import MarkdownIt from 'markdown-it';
+import ReactMarkdown from "react-markdown";
+import MdEditor from 'react-markdown-editor-lite';
+import Editor from "react-markdown-editor-lite";
+import "react-markdown-editor-lite/lib/index.css";
+
+// Register plugins if required
+// MdEditor.use(YOUR_PLUGINS_HERE);
+
+// Initialize a markdown parser
+const mdParser = new MarkdownIt(/* Markdown-it options */);
 
 ModalEditProduct.propTypes = {
 
@@ -10,12 +21,14 @@ ModalEditProduct.propTypes = {
 
 function ModalEditProduct(props) {
     const { editId } = props;
+    const mdEditor = React.useRef(null);
     const [product, setProduct] = useState({
         title: '',
         description: '',
         brand: '',
         price: 0
-    })
+    });
+    const [description, setDescription] = useState('');
 
     useEffect(() => {
         if (editId) {
@@ -31,6 +44,7 @@ function ModalEditProduct(props) {
                 brand,
                 price } = response.data;
             setProduct({ title, description, brand, price });
+            setDescription(description);
         }
     }
 
@@ -60,6 +74,21 @@ function ModalEditProduct(props) {
         }
     }
 
+    // function handleEditorChange({ html, text }) {
+    //     console.log('handleEditorChange >>>', html);
+    //     let productCopy = { ...product };
+    //     productCopy.description = html;
+    //     setProduct(productCopy);
+    // }
+
+    const handleEditorChange = ({ html, text }) => {
+        const newValue = text.replace(/\d/g, "");
+        setDescription(newValue);
+        let productCopy = { ...product };
+        productCopy.description = html;
+        setProduct(productCopy);
+    }
+
     return (
         <div>
             <Modal isOpen={true}>
@@ -75,16 +104,24 @@ function ModalEditProduct(props) {
                             <input type="text" value={product.title} name="title" class="form-control" onChange={(event) => setProduct({ ...product, [event.target.name]: event.target.value })} />
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputPassword1">Description: </label>
-                            <input type="text" value={product.description} name="description" class="form-control" onChange={(event) => setProduct({ ...product, [event.target.name]: event.target.value })} />
-                        </div>
-                        <div class="form-group">
                             <label for="exampleInputPassword1">Brand: </label>
                             <input type="text" value={product.brand} name="brand" class="form-control" onChange={(event) => setProduct({ ...product, [event.target.name]: event.target.value })} />
                         </div>
                         <div class="form-group">
                             <label for="exampleInputPassword1">Price: </label>
                             <input type="text" value={product.price} name="price" class="form-control" onChange={(event) => setProduct({ ...product, [event.target.name]: event.target.value })} />
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Description: </label>
+                            <Editor
+                                ref={mdEditor}
+                                value={description}
+                                style={{
+                                    height: "500px"
+                                }}
+                                onChange={handleEditorChange}
+                                renderHTML={text => <ReactMarkdown children={text} />}
+                            />
                         </div>
                     </form>
                 </ModalBody>
