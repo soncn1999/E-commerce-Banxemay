@@ -10,6 +10,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { changeUserCart } from '../../store/userSlice';
 import Swal from 'sweetalert2';
 import { formatter } from '../../utils/helper';
+import path from '../../utils/path';
+import { handlePostCommentApi } from '../../services/user';
 
 Detail.propTypes = {
 
@@ -20,8 +22,12 @@ function Detail(props) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const userCart = useSelector((state) => state.user.current);
+    const user_id = useSelector((state) => state.user.id);
+    const userCurrent = useSelector((state) => state.user);
+    const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
     const [detailProduct, setDetailProduct] = useState({});
-    const [relatedProduct, setRelatedProduct] = useState()
+    const [relatedProduct, setRelatedProduct] = useState();
+    const [comment, setComment] = useState('');
     useEffect(() => {
         getDetailProduct(pid);
     }, []);
@@ -41,40 +47,104 @@ function Detail(props) {
         setRelatedProduct(product);
     }
 
+    console.log('Người dùng hiện tại >>> ', userCurrent);
+
     const handleAddAProduct = async (product) => {
-        let cartCopy = [...userCart?.cart];
-
-        let productItem = {};
-
-        const { createdAt, description, rating, slug, sold, totalRatings, updatedAt, ...productCopy } = product;
-
-        productItem['product'] = productCopy;
-        productItem['color'] = 'black';
-        productItem['quantity'] = 1;
-
-        cartCopy.push(productItem);
-
-        let response = await updateCartApi({
-            pid: productCopy._id,
-            quantity: productItem['quantity'],
-            color: productItem['color']
-        });
-
-        if (response && response.success) {
+        if (!isLoggedIn && !user_id) {
             Swal.fire({
-                position: 'top-end',
-                icon: 'success',
-                title: 'Đã thêm mặt hàng vào Giỏ hàng',
-                showConfirmButton: false,
-                timer: 1500
-            })
-            dispatch(changeUserCart(cartCopy));
+                title: "Bạn chưa đăng nhập",
+                text: "Đăng nhập để vào giỏ hàng",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Đăng nhập"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    navigate(`/${path.LOGIN}`);
+                }
+            });
+        } else {
+            let cartCopy = [...userCart?.cart];
+
+            let productItem = {};
+
+            const { createdAt, description, rating, slug, sold, totalRatings, updatedAt, ...productCopy } = product;
+
+            productItem['product'] = productCopy;
+            productItem['color'] = 'black';
+            productItem['quantity'] = 1;
+
+            cartCopy.push(productItem);
+
+            let response = await updateCartApi({
+                pid: productCopy._id,
+                quantity: productItem['quantity'],
+                color: productItem['color']
+            });
+
+            if (response && response.success) {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Đã thêm mặt hàng vào Giỏ hàng',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                dispatch(changeUserCart(cartCopy));
+            }
         }
     }
 
     const handleAccessDetail = async (pid) => {
         navigate(`/products/${pid}`);
         await getDetailProduct(pid);
+    }
+
+    const handlePostComment = async () => {
+        if (!isLoggedIn && !user_id) {
+            Swal.fire({
+                title: "Bạn chưa đăng nhập",
+                text: "Đăng nhập để đánh giá",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Đăng nhập"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    navigate(`/${path.LOGIN}`);
+                }
+            });
+        } else {
+            let data = {
+                pid: pid,
+                star: 5,
+                comment: comment
+            }
+
+            const response = await handlePostCommentApi(data);
+
+            if (response && response.success) {
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: "Đã tạo đánh giá cho sản phẩm",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                setComment("");
+                await getDetailProduct(pid);
+            } else {
+                Swal.fire({
+                    position: "top-end",
+                    icon: "warning",
+                    title: "Chưa tạo đánh giá cho sản phẩm",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        }
     }
 
     return (
@@ -108,54 +178,93 @@ function Detail(props) {
                                 </div>
                             </div>
 
-                            {/* <div className="lead">
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Comment</span>
+                            <div className="lead">
+                                <div class="container mt-5 mb-5">
+                                    <div class="d-flex justify-content-center row">
+                                        <div class="d-flex flex-column col-md-8">
+                                            <div class="coment-bottom bg-white p-2 px-4">
+                                                <div class="d-flex flex-row add-comment-section mt-4 mb-4">
+                                                    <div class="col-auto">
+                                                        <label class="sr-only" for="inlineFormInputGroup">Username</label>
+                                                        <div class="input-group mb-2">
+                                                            <div class="input-group-prepend">
+                                                                <div class="input-group-text">@ {userCurrent && userCurrent?.current ? `${userCurrent.current.firstname} ${userCurrent.current.lastname}` : `Username`}</div>
+                                                            </div>
+                                                            <input type="text" class="form-control" value={comment} id="inlineFormInputGroup" placeholder="Nội dung bình luận" name="comment" onChange={(event) => setComment(event.target.value)} />
+                                                        </div>
+                                                    </div>
+
+                                                    <button class="btn btn-primary" type="button" style={{ marginTop: '0' }} onClick={() => handlePostComment()}>Bình luận</button>
+                                                </div>
+                                                <div style={{ height: '250px', overflow: 'scroll' }}>
+                                                    {
+                                                        detailProduct && detailProduct?.rating?.length > 0 && detailProduct.rating.map((item) => {
+                                                            return (
+                                                                <div class="commented-section mt-2">
+                                                                    <div class="d-flex flex-row align-items-center commented-user">
+                                                                        <h5 class="mr-2">{item.postedBy.firstname} {item.postedBy.lastname}</h5>
+                                                                        {/* <span class="dot mb-1"></span>
+                                                                    <span class="mb-1 ml-2">4 hours ago</span> */}
+                                                                    </div>
+                                                                    <div class="comment-text-sm"><span>{item.comment}</span></div>
+                                                                    <div
+                                                                        class="reply-section">
+                                                                        <div class="d-flex flex-row align-items-center voting-icons"><i class="fa fa-sort-up fa-2x mt-3 hit-voting"></i><i class="fa fa-sort-down fa-2x mb-3 hit-voting"></i><span class="ml-2">10</span><span class="dot ml-2"></span>
+                                                                            <h6 class="ml-2 mt-1">Reply</h6>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            )
+                                                        })
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <textarea class="form-control" aria-label="With textarea"></textarea>
                                 </div>
-                            </div> */}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </section>
+            </section >
             {/* <!-- Related items section--> */}
-            <section class="py-5 bg-light">
+            < section class="py-5 bg-light" >
                 <div class="container px-4 px-lg-5 mt-5">
                     <h2 class="fw-bolder mb-4">Sản phẩm liên quan</h2>
                     <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
                         {
                             relatedProduct && relatedProduct?.length > 0 && relatedProduct.map((item) => {
-                                return (
-                                    <div class="col mb-5" key={item._id}>
-                                        <div class="card h-100">
-                                            {/* <!-- Product image--> */}
-                                            <img class="card-img-top"
-                                                src={item?.image?.length > 0 ? item?.image[0] : `https://dummyimage.com/450x300/dee2e6/6c757d.jpg`} alt="..." />
-                                            {/* <!-- Product details--> */}
-                                            <div class="card-body p-4">
-                                                <div class="text-center">
-                                                    {/* <!-- Product name--> */}
-                                                    <h5 class="fw-bolder" style={{ cursor: 'pointer' }} onClick={() => handleAccessDetail(item._id)}>{item.title}</h5>
-                                                    {/* <!-- Product price--> */}
-                                                    {item.price}
+                                if (!item.isRevoked && item.quantity > 0) {
+                                    return (
+                                        <div class="col mb-5" key={item._id}>
+                                            <div class="card h-100">
+                                                {/* <!-- Product image--> */}
+                                                <img class="card-img-top"
+                                                    src={item?.image?.length > 0 ? item?.image[0] : `https://dummyimage.com/450x300/dee2e6/6c757d.jpg`} alt="..." />
+                                                {/* <!-- Product details--> */}
+                                                <div class="card-body p-4">
+                                                    <div class="text-center">
+                                                        {/* <!-- Product name--> */}
+                                                        <h5 class="fw-bolder" style={{ cursor: 'pointer' }} onClick={() => handleAccessDetail(item._id)}>{item.title}</h5>
+                                                        {/* <!-- Product price--> */}
+                                                        {formatter.format(item.price)}
+                                                    </div>
+                                                </div>
+                                                {/* <!-- Product actions--> */}
+                                                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                                    <div class="text-center"><a class="btn btn-outline-dark mt-auto" onClick={() => handleAccessDetail(item._id)}>Xem sản phẩm</a></div>
                                                 </div>
                                             </div>
-                                            {/* <!-- Product actions--> */}
-                                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" onClick={() => handleAccessDetail(item._id)}>Xem sản phẩm</a></div>
-                                            </div>
                                         </div>
-                                    </div>
-                                )
+                                    )
+                                }
                             })
                         }
                     </div>
                 </div>
-            </section>
+            </section >
             <Footer />
-        </div>
+        </div >
     );
 }
 

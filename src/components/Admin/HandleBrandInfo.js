@@ -90,8 +90,8 @@ function HandleBrandInfo(props) {
             <thead>
                 <tr>
                     <th scope="col">STT</th>
-                    <th scope="col">Title</th>
-                    <th scope="col">Action</th>
+                    <th scope="col">Tiêu đề</th>
+                    <th scope="col">Thao tác</th>
                 </tr>
             </thead>
             <tbody>

@@ -53,8 +53,6 @@ function Login(props) {
                     email,
                     password
                 }));
-
-                console.log('check status user after Log In >>> ', isLoggedIn);
             }
         }
     }

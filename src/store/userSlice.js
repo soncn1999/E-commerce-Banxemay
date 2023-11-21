@@ -8,6 +8,7 @@ const initialState = {
     token: null,
     id: '',
     email: null,
+    address: null,
 }
 
 export const userSlice = createSlice({
@@ -15,11 +16,15 @@ export const userSlice = createSlice({
     initialState,
     reducers: {
         changeUserCart: (state, action) => {
-            console.log('check slide >>> ', action.payload);
             let stateCopy = { ...state.current };
             stateCopy.cart = action.payload;
             state.current = stateCopy;
         },
+        updateAddress: (state, action) => {
+            let stateCopy = { ...state.address };
+            stateCopy = action.payload;
+            state.address = stateCopy;
+        }
         // registerUser: (state, action) => {
 
         // }
@@ -95,6 +100,6 @@ export const userSlice = createSlice({
     },
 });
 
-export const { changeUserCart } = userSlice.actions;
+export const { changeUserCart, updateAddress } = userSlice.actions;
 
 export default userSlice.reducer;

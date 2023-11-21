@@ -1,0 +1,22 @@
+.order {
+    &-wrapper {
+        display: flex;
+    }
+    &-image {
+        flex: 1;
+        &__illustration {
+            width: 100%;
+        }
+    }
+    &-payment {
+        flex: 2;
+        flex-direction: column;
+    }
+    &-address {
+        padding: 10px 0;
+    }
+    &-input {
+        font-size: 13px;
+        margin: 5px 0;
+    }
+}

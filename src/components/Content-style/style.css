@@ -11091,3 +11091,55 @@ fieldset:disabled .btn {
     line-height: 30px;
     padding-right: 10px;
 }
+
+.form-search-product {
+    width: 400px !important;
+    font-size: 15px !important;
+    padding: 5px 0;
+    position: relative;
+}
+
+.form-search-result__wrapper {
+    position: absolute;
+    z-index: 1000;
+    box-shadow: 3px 4px 5px rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    z-index: 1000;
+    cursor: pointer;
+}
+
+.form-search-result {
+    background-color: #fff;
+    padding: 10px;
+    min-width: 530px;
+    font-size: 13px;
+    min-height: 50px;
+    line-height: 50px;
+}
+
+.form-search-result:hover {
+    background-color: #f1f1f1;
+}
+
+.form-search-result__title {
+    font-size: 12px;
+    padding: 5px 0;
+}
+
+.form-search-result__item {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.form-search-result__item-img {
+}
+
+.form-search-result__item-title {
+    padding: 0 15px;
+    font-weight: 550;
+}
+
+.form-search-result__item-price {
+    color: #ee4d2d;
+    font-weight: 550;
+}

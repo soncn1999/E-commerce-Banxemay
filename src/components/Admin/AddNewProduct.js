@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Sidebar, Header, Footer } from '../../pages/private';
-import { createNewProductApi, uploadImageProductApi, getListBrandApi } from '../../services/product';
+import { createNewProductApi, uploadImageProductApi, getListBrandApi, getAllCategoryApi } from '../../services/product';
 import Swal from 'sweetalert2';
 
 import MarkdownIt from 'markdown-it';
@@ -22,6 +22,7 @@ AddNewProduct.propTypes = {
 function AddNewProduct(props) {
     useEffect(() => {
         handleGetListBrand();
+        getListCategory();
     }, [])
 
     const [product, setProduct] = useState({
@@ -32,9 +33,12 @@ function AddNewProduct(props) {
         previewImgUrl: "",
         files: "",
         quantity: 0,
+        category: "",
     });
 
     const [brand, setBrand] = useState([]);
+
+    const [listCategory, setListCategory] = useState([]);
 
     const handleGetListBrand = async () => {
         let response = await getListBrandApi();
@@ -44,10 +48,17 @@ function AddNewProduct(props) {
         }
     }
 
-    const handleSubmitForm = async () => {
-        let { previewImgUrl, files, ...dataCopy } = product;
+    const getListCategory = async () => {
+        let response = await getAllCategoryApi();
+        if (response && response.success) {
+            const { productCategories } = response;
+            setListCategory(productCategories);
+        }
+    }
 
-        console.log('Check data copy >>> ', dataCopy);
+    const handleSubmitForm = async () => {
+        console.log('Product >>> ', product);
+        let { previewImgUrl, files, ...dataCopy } = product;
 
         const response = await createNewProductApi(dataCopy);
         if (response && response.success) {
@@ -70,6 +81,8 @@ function AddNewProduct(props) {
                     price: 0,
                     previewImgUrl: "",
                     files: "",
+                    category: "",
+
                 });
             } else {
                 Swal.fire({
@@ -87,7 +100,9 @@ function AddNewProduct(props) {
                 price: 0,
                 previewImgUrl: "",
                 files: "",
-                quantity: 0
+                quantity: 0,
+                category: "",
+
             });
         } else {
             Swal.fire({
@@ -132,13 +147,13 @@ function AddNewProduct(props) {
                     <div class="row">
                         <form>
                             <div class="form-group">
-                                <label for="exampleInputEmail1">Title: </label>
-                                <input type="text" name="title" value={product.title} class="form-control" placeholder="Enter Product Title" onChange={(event) => setProduct({ ...product, [event.target.name]: event.target.value })} />
+                                <label for="exampleInputEmail1">Tiêu đề: </label>
+                                <input type="text" name="title" value={product.title} class="form-control" placeholder="Nhập tiêu đề" onChange={(event) => setProduct({ ...product, [event.target.name]: event.target.value })} />
                             </div>
                             <div className="form-group">
-                                <label for="exampleInputEmail1">Brand: </label>
+                                <label for="exampleInputEmail1">Nhãn hiệu: </label>
                                 <select class="form-select" aria-label="Default select example" name="brand" onChange={(event) => setProduct({ ...product, [event.target.name]: event.target.value })}>
-                                    <option selected value=''>Open this select menu</option>
+                                    <option selected value=''>Chọn nhãn hiệu</option>
                                     {
                                         brand && brand.length > 0 && brand.map((item) => {
                                             return (<option value={item.title}>{item.title}</option>)
@@ -147,19 +162,43 @@ function AddNewProduct(props) {
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputPassword1">Price: </label>
+                                <label for="exampleInputPassword1">Giá bán: </label>
                                 <input type="text" name="price" value={product.price} class="form-control" placeholder="Enter Product Price" onChange={(event) => setProduct({ ...product, [event.target.name]: event.target.value })} />
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputPassword1">Quantity: </label>
+                                <label for="exampleInputPassword1">Số lượng: </label>
                                 <input type="text" name="quantity" value={product.quantity} class="form-control" placeholder="Enter Product Quantity" onChange={(event) => setProduct({ ...product, [event.target.name]: event.target.value })} />
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputPassword1">Description: </label>
+                                <label for="exampleInputPassword1">Thể loại: </label>
+                                <select class="form-select form-select-price-sort" aria-label="Default select example" value={product.category} name="category" onChange={(event) => setProduct({ ...product, [event.target.name]: event.target.value })}>
+                                    <option selected>Thể loại</option>
+                                    {
+                                        listCategory && listCategory?.length > 0 && listCategory.map((item) => {
+                                            if (!item.isChild) {
+                                                return (
+                                                    <>
+                                                        <option value={item.title}>{item.title}</option>
+                                                        <>
+                                                            {item && item?.childCategory.length > 0 && item.childCategory.map((element) => {
+                                                                return <option value={element.title}>{element.title}</option>
+                                                            })}
+                                                        </>
+                                                    </>
+                                                )
+
+                                            }
+
+                                        })
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Mô tả sản phẩm: </label>
                                 <MdEditor style={{ height: '500px' }} renderHTML={text => mdParser.render(text)} onChange={handleEditorChange} />
                             </div>
                             <div class="form-group">
-                                <label for="image-product-upload">Image Illustration: </label>
+                                <label for="image-product-upload">Ảnh minh họa: </label>
                                 <input type="file" id="image-product-upload" name="img" accept="image/*" onChange={(event) => handleOnChangeImage(event)} />
                             </div>
                             <div className="preview-image"
@@ -172,7 +211,7 @@ function AddNewProduct(props) {
                                     width: '210px',
                                 }}>
                             </div>
-                            <div class="btn btn-primary" onClick={() => handleSubmitForm()}>Submit</div>
+                            <div class="btn btn-primary" onClick={() => handleSubmitForm()}>Tạo mới sản phẩm</div>
                         </form>
                     </div>
                 </div>

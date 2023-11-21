@@ -4,3 +4,5 @@ export { default as Public } from './Public';
 export { default as Register } from './Register';
 export { default as Cart } from './Cart';
 export { default as Detail } from './Detail';
+export { default as Order } from './Order';
+export { default as PayPal } from './PayPal';

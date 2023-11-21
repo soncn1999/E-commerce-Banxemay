@@ -3,9 +3,9 @@ import { Input, Button } from 'reactstrap';
 import './style.scss';
 import './css/styles.css';
 import { Route, Routes } from 'react-router-dom';
-import { Login, Home, Public, Register, Cart, Detail } from './pages/public';
+import { Login, Home, Public, Register, Cart, Detail, Order } from './pages/public';
 import { Private } from './pages/private';
-import { AddNewBrand, AddNewCategory, AddNewProduct, AddSysUserByAdmin, HandleBrandInfo, HandleCategoryInfo, HandleProductInfo, HandleUserAdminInfo, HandleUserBlocked, HandleUserInfo } from './components';
+import { AddNewBrand, AddNewCategory, AddNewProduct, AddSysUserByAdmin, HandleBrandInfo, HandleCategoryInfo, HandleProductInfo, HandleUserAdminInfo, HandleUserBlocked, HandleUserInfo, ListOrderCancel, ListOrderComplete, ListOrderIncomplete } from './components';
 import path from './utils/path';
 
 function App() {
@@ -18,6 +18,7 @@ function App() {
           <Route path={path.REGISTER} element={<Register />} />
           <Route path={path.CART} element={<Cart />} />
           <Route path={`/${path.PRODUCTS}/:pid`} element={<Detail />} />
+          <Route path={path.ORDER} element={<Order />} />
         </Route>
         <Route path={path.PRIVATE} element={<Private />}>
           <Route path={path.LIST_USERS} element={<HandleUserInfo />} />
@@ -30,6 +31,9 @@ function App() {
           <Route path={path.ADD_BRAND} element={<AddNewBrand />} />
           <Route path={path.ADD_CATEGORY} element={<AddNewCategory />} />
           <Route path={path.LIST_CATEGORY} element={<HandleCategoryInfo />} />
+          <Route path={path.ORDER_COMPLETE} element={<ListOrderComplete />} />
+          <Route path={path.ORDER_INCOMPLETE} element={<ListOrderIncomplete />} />
+          <Route path={path.ORDER_CANCELLED} element={<ListOrderCancel />} />
         </Route>
       </Routes>
     </div>

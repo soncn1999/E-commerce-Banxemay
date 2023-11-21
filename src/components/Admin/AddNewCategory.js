@@ -54,13 +54,13 @@ function AddNewCategory(props) {
                 <div class="row">
                     <form>
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Name: </label>
-                            <input type="text" name="title" class="form-control" placeholder="Enter Category Title" onChange={(event) => setCategory({ ...category, [event.target.name]: event.target.value })} />
+                            <label for="exampleInputEmail1">Tiêu đề thể loại: </label>
+                            <input type="text" name="title" class="form-control" placeholder="Nhập tiêu đề thể loại" onChange={(event) => setCategory({ ...category, [event.target.name]: event.target.value })} />
                         </div>
                         <div className="form-group">
-                            <label for="exampleInputEmail1">Parent Category: </label>
+                            <label for="exampleInputEmail1">Thuộc thể loại: </label>
                             <select class="form-select" aria-label="Default select example" name="parentCategory" onChange={(event) => setCategory({ ...category, [event.target.name]: event.target.value })}>
-                                <option selected value=''>Open this select menu</option>
+                                <option selected value=''>Chọn thể loại cha</option>
                                 {
                                     listCategory && listCategory.length > 0 && listCategory.map((item) => {
                                         if (!item.isChild) {
@@ -71,7 +71,7 @@ function AddNewCategory(props) {
                             </select>
                         </div>
 
-                        <div class="btn btn-primary" onClick={() => handleSubmitForm()}>Submit</div>
+                        <div class="btn btn-primary" onClick={() => handleSubmitForm()}>Xác nhận</div>
                     </form>
                 </div>
             </div>

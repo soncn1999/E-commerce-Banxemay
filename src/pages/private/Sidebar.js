@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './private-style/Admin.css';
 import { Link, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import path from '../../utils/path';
 
 Sidebar.propTypes = {
@@ -10,6 +11,7 @@ Sidebar.propTypes = {
 
 function Sidebar(props) {
     const navigate = useNavigate();
+    const userCurrent = useSelector((state) => state.user);
     const handleToggle = (idCss) => {
         let element = document.querySelector(`#sub${idCss}`);
 
@@ -17,6 +19,9 @@ function Sidebar(props) {
             element.classList.toggle('show');
         }
     }
+
+    console.log('Thông tin người dùng >>> ', userCurrent);
+
     return (
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
@@ -40,37 +45,44 @@ function Sidebar(props) {
             </li>
 
             {/* <!-- Divider --> */}
-            <div class="sidebar-heading">
-                Người dùng
-            </div>
-            <li class="nav-item">
-                <div class="nav-link collapsed" style={{ cursor: 'pointer' }} id="menu-title-1" onClick={() => handleToggle('menu-title-1')}>
-                    <i class="fas fa-fw fa-cog"></i>
-                    <span>Chỉnh sửa thông tin</span>
-                </div>
-                <div class="collapse" id="submenu-title-1">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Thao tác:</h6>
-                        <Link class="collapse-item" to={path.LIST_USERS}>Quản lý DS User</Link>
-                        <Link class="collapse-item" to={path.LIST_USERS_ADMIN}>Quản lý DS Admin</Link>
-                        <Link class="collapse-item" to={path.LIST_USERS_BLOCK}>Quản lý DS bị khóa</Link>
-                    </div>
-                </div>
-            </li>
-            <li class="nav-item">
-                <div class="nav-link collapsed" style={{ cursor: 'pointer' }} id="menu-title-2" onClick={() => handleToggle('menu-title-2')}>
-                    <i class="fas fa-fw fa-wrench"></i>
-                    <span>Cấp quyền</span>
-                </div>
-                <div class="collapse" id="submenu-title-2">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Thao tác:</h6>
-                        {/* <a class="collapse-item" href="utilities-color.html">Cấp quyền User</a> */}
-                        <Link class="collapse-item" to={`${path.ADD_SYS_USER}`}>Tạo mới và cấp quyền</Link>
-                    </div>
-                </div>
-            </li>
-            <hr class="sidebar-divider" />
+
+            {
+                userCurrent && userCurrent.isLoggedIn && userCurrent.current?.role == 'admin' && (
+                    <>
+                        <div class="sidebar-heading">
+                            Người dùng
+                        </div>
+                        <li class="nav-item">
+                            <div class="nav-link collapsed" style={{ cursor: 'pointer' }} id="menu-title-1" onClick={() => handleToggle('menu-title-1')}>
+                                <i class="fas fa-fw fa-cog"></i>
+                                <span>Chỉnh sửa thông tin</span>
+                            </div>
+                            <div class="collapse" id="submenu-title-1">
+                                <div class="bg-white py-2 collapse-inner rounded">
+                                    <h6 class="collapse-header">Thao tác:</h6>
+                                    <Link class="collapse-item" to={path.LIST_USERS}>Quản lý DS User</Link>
+                                    <Link class="collapse-item" to={path.LIST_USERS_ADMIN}>Quản lý DS Admin</Link>
+                                    <Link class="collapse-item" to={path.LIST_USERS_BLOCK}>Quản lý DS bị khóa</Link>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <div class="nav-link collapsed" style={{ cursor: 'pointer' }} id="menu-title-2" onClick={() => handleToggle('menu-title-2')}>
+                                <i class="fas fa-fw fa-wrench"></i>
+                                <span>Cấp quyền</span>
+                            </div>
+                            <div class="collapse" id="submenu-title-2">
+                                <div class="bg-white py-2 collapse-inner rounded">
+                                    <h6 class="collapse-header">Thao tác:</h6>
+                                    {/* <a class="collapse-item" href="utilities-color.html">Cấp quyền User</a> */}
+                                    <Link class="collapse-item" to={`${path.ADD_SYS_USER}`}>Tạo mới và cấp quyền</Link>
+                                </div>
+                            </div>
+                        </li>
+                        <hr class="sidebar-divider" />
+                    </>
+                )
+            }
 
             <div class="sidebar-heading">
                 Sản phẩm
@@ -147,13 +159,19 @@ function Sidebar(props) {
             <li class="nav-item">
                 <div class="nav-link collapsed" style={{ cursor: 'pointer' }} id="menu-title-6" onClick={() => handleToggle('menu-title-6')}>
                     <i class="fas fa-fw fa-cog"></i>
-                    <span>Quản lý đơn hàng</span>
+                    <span>Danh sách đơn hàng</span>
                 </div>
                 <div class="collapse" id="submenu-title-6">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Thao tác:</h6>
-                        <Link to={`${path.LIST_PRODUCTS}`} class="collapse-item" style={{ cursor: 'pointer' }}>
-                            Quản lý danh sách
+                        <Link to={`${path.ORDER_INCOMPLETE}`} class="collapse-item" style={{ cursor: 'pointer' }}>
+                            Đơn chưa hoàn thành
+                        </Link>
+                        <Link to={`${path.ORDER_COMPLETE}`} class="collapse-item" style={{ cursor: 'pointer' }}>
+                            Đơn đã hoàn thành
+                        </Link>
+                        <Link to={`${path.ORDER_CANCELLED}`} class="collapse-item" style={{ cursor: 'pointer' }}>
+                            Đơn đã bị hủy
                         </Link>
                     </div>
                 </div>

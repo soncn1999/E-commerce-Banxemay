@@ -20,6 +20,10 @@ const path = {
     LIST_USERS_ADMIN: 'list-users-admin',
     LIST_USERS_BLOCK: 'list-users-block',
     LIST_BRAND: 'list-brand',
+    ORDER: 'order',
+    ORDER_INCOMPLETE: 'order-incomplete',
+    ORDER_COMPLETE: 'order-complete',
+    ORDER_CANCELLED: 'order-cancelled',
 }
 
 export default path;

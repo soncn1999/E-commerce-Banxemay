@@ -33,21 +33,21 @@ function Header(props) {
         }
 
         //Token Expired
-        if (!isLoggedIn && !user_id) {
-            Swal.fire({
-                position: 'top-end',
-                icon: 'error',
-                title: 'Phiên làm việc đã hết hạn, hãy đăng nhập lại!',
-                showConfirmButton: false,
-                timer: 1500
-            });
-            navigate(`/${path.LOGIN}`);
-        }
+        // if (!isLoggedIn && !user_id) {
+        //     Swal.fire({
+        //         position: 'top-end',
+        //         icon: 'error',
+        //         title: 'Phiên làm việc đã hết hạn, hãy đăng nhập lại!',
+        //         showConfirmButton: false,
+        //         timer: 1500
+        //     });
+        //     navigate(`/${path.LOGIN}`);
+        // }
 
         return () => {
-            if (!isLoggedIn) {
-                navigate(`/${path.LOGIN}`);
-            }
+            // if (!isLoggedIn) {
+            //     navigate(`/${path.LOGIN}`);
+            // }
         }
     }, [isLoggedIn]);
 
@@ -56,6 +56,28 @@ function Header(props) {
     const handleLogoutUser = () => {
         dispatch(handleLogoutRedux());
     }
+
+    const handleNavigateToCart = () => {
+        if (!isLoggedIn && !user_id) {
+            Swal.fire({
+                title: "Bạn chưa đăng nhập",
+                text: "Đăng nhập để vào giỏ hàng",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Đăng nhập"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    navigate(`/${path.LOGIN}`);
+                }
+            });
+        } else {
+            navigate(`/${path.CART}`);
+        }
+    }
+
+    // console.log('set show quantity cart >>> ', showQuantityOrder);
 
     return (
         <div className="header fixed-top" >
@@ -93,7 +115,7 @@ function Header(props) {
                                     ĐĂNG KÝ
                                 </li>
                                 {
-                                    userCurrent && userCurrent?.current?.role == "admin" &&
+                                    userCurrent && userCurrent?.current?.role != "user" &&
                                     <li className="header-above__item__submenu-item" onClick={() => navigate(`/${path.PRIVATE}`)}>
                                         TRANG ADMIN
                                     </li>
@@ -132,7 +154,7 @@ function Header(props) {
                             </div>
                         </div>
 
-                        <div className="header-bellow__item" onClick={() => navigate(`/${path.CART}`)} style={{ cursor: 'pointer' }}>
+                        <div className="header-bellow__item" onClick={() => handleNavigateToCart()} style={{ cursor: 'pointer' }}>
                             <div className="header-bellow__icon cart--color"><BsCartFill /></div>
                             <div className="header-bellow__content">
                                 <div className="header-bellow__content-title cart--title">GIỎ HÀNG</div>

@@ -39,10 +39,10 @@ function AddNewBrand(props) {
                 <div class="row">
                     <form>
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Name: </label>
-                            <input type="text" name="title" class="form-control" placeholder="Enter Brand Title" onChange={(event) => setBrand({ ...brand, [event.target.name]: event.target.value })} />
+                            <label for="exampleInputEmail1">Tên hãng: </label>
+                            <input type="text" name="title" class="form-control" placeholder="Nhập vào tên hãng" onChange={(event) => setBrand({ ...brand, [event.target.name]: event.target.value })} />
                         </div>
-                        <div class="btn btn-primary" onClick={() => handleSubmitForm()}>Submit</div>
+                        <div class="btn btn-primary" onClick={() => handleSubmitForm()}>Xác nhận</div>
                     </form>
                 </div>
             </div>

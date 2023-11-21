@@ -79,7 +79,7 @@ function HandleCategoryInfo(props) {
                                                 <i class="fa-solid fa-pen"></i>
                                             </Button>
                                             &nbsp;
-                                            <Button className="category__btn" color="danger">
+                                            <Button className="category__btn" color="danger" onClick={() => handleDeleteCategory(item._id)}>
                                                 <i class="fa-solid fa-trash"></i>
                                             </Button>
                                         </div>

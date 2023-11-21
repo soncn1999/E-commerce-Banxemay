@@ -45,7 +45,7 @@ const updateProductApi = (data, id) => axios({
 
 const deleteProductApi = (id) => axios({
     url: `/product/deleteproduct?id=${id}`,
-    method: 'delete',
+    method: 'put',
 });
 
 const createNewBrandApi = (data) => axios({
@@ -102,9 +102,31 @@ const handleDeleteBrandApi = (id) => axios({
     method: 'delete',
 });
 
+const handleGetListOrderApi = () => axios({
+    url: '/order/get-list-order',
+    method: 'get',
+});
+
+const updateOrderApi = (id, data) => axios({
+    url: `/order/update-status-order/${id}`,
+    method: 'put',
+    data
+})
+
+const getDetailOrderApi = (id) => axios({
+    url: `/order/get-detail-order/${id}`,
+    method: 'get',
+});
+
+const getProductByCategoryApi = (category) => axios({
+    url: `/product/getallproduct/?category=${category}`,
+    method: 'get',
+});
+
 export {
     getAllProductApi, getDetailProductApi, createNewProductApi, uploadImageProductApi, updateProductApi,
     deleteProductApi, createNewBrandApi, getAllCategoryApi, createCategoryApi, getListBrandApi,
     getDetailProductCategoryApi, handleUpdateCategoryApi, handleGetDetailBrandApi, handleUpdateBrandApi,
-    handleDeleteBrandApi, getListProductRelateBrandApi, getListProductSortByPriceApi, handleDeleteCategoryApi
+    handleDeleteBrandApi, getListProductRelateBrandApi, getListProductSortByPriceApi, handleDeleteCategoryApi,
+    handleGetListOrderApi, updateOrderApi, getDetailOrderApi, getProductByCategoryApi
 };

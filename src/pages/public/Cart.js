@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import './public-style/Cart.css';
 import { Header, Footer } from '../../components';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { getAllCoupons, getListOrderApi } from '../../services/user';
 import moment from 'moment';
 import path from '../../utils/path';
@@ -18,6 +18,7 @@ Cart.propTypes = {
 
 function Cart(props) {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const user_id = useSelector((state) => state.user.id);
     const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
     const userCurrent = useSelector((state) => state.user);
@@ -35,7 +36,15 @@ function Cart(props) {
 
     useEffect(() => {
         if (userCurrent && userCurrent.current && userCurrent.current.cart.length > 0) {
-            let cartArrCopy = [...userCurrent.current.cart];
+            let cartArr = [...userCurrent.current.cart];
+            let cartArrCopy = [];
+            let cartArrFilter = cartArr.map((item) => {
+                if (!item.product.isRevoked && item.product.quantity > 0) {
+                    cartArrCopy.push(item);
+                }
+            });
+
+            console.log('cart copy >>>', cartArrCopy);
 
             let totalProductsResult = cartArrCopy.reduce((total, item) => {
                 return total + item.quantity;
@@ -88,7 +97,7 @@ function Cart(props) {
             let quantityTemp = cartArrItem.quantity;
             quantityTemp = quantityTemp + operator;
 
-            if (quantityTemp <= productQuantity) {
+            if (quantityTemp <= productQuantity && quantityTemp > 0) {
                 cartArrItem.quantity = quantityTemp;
 
                 cartArrCopy.splice(index, 1, cartArrItem);
@@ -173,6 +182,10 @@ function Cart(props) {
         setTotalPayment(totalPaymentResult);
     }
 
+    const handleOpenOrder = () => {
+        navigate(`/${path.ORDER}`);
+    }
+
     return (
         <Fragment>
             <Header />
@@ -188,30 +201,32 @@ function Cart(props) {
                             </div>
                             {
                                 userCurrent.isLoggedIn && userCurrent?.current?.cart.length > 0 && userCurrent.current.cart.map((item, index) => {
-                                    return (
-                                        <div className="row border-top border-bottom" key={item._id}>
-                                            <div className="row main align-Sản phẩm-center">
-                                                <div className="col-2">
-                                                    {
-                                                        item?.product?.image?.length > 0 ? <img className="img-fluid" src={item.product.image[0]} /> :
-                                                            <img className="img-fluid" src='https://dummyimage.com/450x300/dee2e6/6c757d.jpg' />
-                                                    }
+                                    if (!item.product.isRevoked && item.product.quantity > 0) {
+                                        return (
+                                            <div className="row border-top border-bottom" key={item._id}>
+                                                <div className="row main align-Sản phẩm-center">
+                                                    <div className="col-2">
+                                                        {
+                                                            item?.product?.image?.length > 0 ? <img className="img-fluid" src={item.product.image[0]} /> :
+                                                                <img className="img-fluid" src='https://dummyimage.com/450x300/dee2e6/6c757d.jpg' />
+                                                        }
+                                                    </div>
+                                                    <div className="col">
+                                                        <div className="row text-muted">Màu sắc: {item.color}</div>
+                                                        <div className="row">{item?.product?.title}</div>
+                                                    </div>
+                                                    <div className="col ajust-quantity">
+                                                        <span onClick={() => handleProductQuantity(-1, index)} style={{ cursor: "pointer" }}>-</span>
+                                                        &nbsp;
+                                                        <span className="border">{item.quantity}</span>
+                                                        &nbsp;
+                                                        <span onClick={() => handleProductQuantity(+1, index)} style={{ cursor: "pointer" }}>+</span>
+                                                    </div>
+                                                    <div className="col">{formatter.format(item?.product?.price)} &nbsp;<span className="close" style={{ cursor: 'pointer' }} onClick={() => removeProduct(index)}>&#10005;</span></div>
                                                 </div>
-                                                <div className="col">
-                                                    <div className="row text-muted">Màu sắc: {item.color}</div>
-                                                    <div className="row">{item?.product?.title}</div>
-                                                </div>
-                                                <div className="col ajust-quantity">
-                                                    <span onClick={() => handleProductQuantity(-1, index)} style={{ cursor: "pointer" }}>-</span>
-                                                    &nbsp;
-                                                    <span className="border">{item.quantity}</span>
-                                                    &nbsp;
-                                                    <span onClick={() => handleProductQuantity(+1, index)} style={{ cursor: "pointer" }}>+</span>
-                                                </div>
-                                                <div className="col">{formatter.format(item?.product?.price)} &nbsp;<span className="close" style={{ cursor: 'pointer' }} onClick={() => removeProduct(index)}>&#10005;</span></div>
                                             </div>
-                                        </div>
-                                    )
+                                        )
+                                    }
                                 })
                             }
                             <div className="back-to-shop">
@@ -220,7 +235,7 @@ function Cart(props) {
                                         <i class="fa-solid fa-arrow-left"></i> &nbsp; Quay lại
                                     </Link>
                                 </span>
-                                <span className="btn-order"><i class="fa-solid fa-circle-check"></i> &nbsp; Đặt hàng</span>
+                                {/* <span className="btn-order"><i class="fa-solid fa-circle-check"></i> &nbsp; Đặt hàng</span> */}
                             </div>
                         </div>
                         <div className="col-md-4 summary">
@@ -235,23 +250,22 @@ function Cart(props) {
                                 <select><option className="text-muted">Standard-Delivery- 5.00 &#8363;</option></select>
                                 <p>Phương thức thanh toán</p>
                                 <select>
-                                    <option className="text-muted">Thanh toán Trực tiếp (Tiền mặt)</option>
-                                    <option className="text-muted">Thanh toán Online (Chuyển khoản)</option>
+                                    <option className="text-muted">Thanh toán Online (PayPal)</option>
                                 </select>
-                                <p>Mã giảm giá</p>
+                                {/* <p>Mã giảm giá</p>
                                 <select>
                                     {
                                         coupons.length > 0 && coupons.map((item) => {
                                             return <option className="text-muted" value={item._id}>{item.name} (-{item.discount}%)</option>
                                         })
                                     }
-                                </select>
+                                </select> */}
                             </form>
                             <div className="row" style={{ borderTop: "1px solid rgba(0,0,0,.1)", padding: "2vh 0" }}>
                                 <div className="col">Tổng số</div>
-                                <div className="col text-right"> 137.00 &#8363;</div>
+                                <div className="col text-right"> {formatter.format(totalPayment)}</div>
                             </div>
-                            <div className="checkout-btn">THANH TOÁN</div>
+                            <div className="checkout-btn" style={{ cursor: "pointer" }} onClick={() => handleOpenOrder()}>THANH TOÁN</div>
                         </div>
                     </div>
                 </div>

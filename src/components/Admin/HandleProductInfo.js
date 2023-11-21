@@ -101,12 +101,13 @@ function HandleProductInfo(props) {
                 <thead>
                     <tr>
                         <th scope="col">STT</th>
-                        <th scope="col">Title</th>
-                        <th scope="col">Brand</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Quantity</th>
-                        <th scope="col">Sold</th>
-                        <th scope="col">Action</th>
+                        <th scope="col">Tiêu đề</th>
+                        <th scope="col">Nhãn hiệu</th>
+                        <th scope="col">Giá</th>
+                        <th scope="col">Số lượng</th>
+                        <th scope="col">Đã bán</th>
+                        <th scope="col">Trạng thái</th>
+                        <th scope="col">Thao tác</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -121,6 +122,7 @@ function HandleProductInfo(props) {
                                         <td scope="row">{item.price}</td>
                                         <td scope="row">{item.quantity}</td>
                                         <td scope="row">{item.sold}</td>
+                                        <td scope="row" style={{ fontWeight: '550' }}>{item.isRevoked ? `Thu hồi` : `Đang kinh doanh`}</td>
                                         <td scope="row">
                                             <Button color="info" style={{ marginTop: 0 }} onClick={() => handleOpenModal(item._id)}>
                                                 <i class="fa-solid fa-pen-to-square"></i>

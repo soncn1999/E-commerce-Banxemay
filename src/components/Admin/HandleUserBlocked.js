@@ -148,11 +148,11 @@ function HandleUserBlocked(props) {
                 <thead>
                     <tr>
                         <th scope="col">STT</th>
-                        <th scope="col">Name</th>
+                        <th scope="col">Tên</th>
                         <th scope="col">Email</th>
-                        <th scope="col">Mobile</th>
-                        <th scope="col">Role</th>
-                        <th scope="col">Action</th>
+                        <th scope="col">Số điện thoại</th>
+                        <th scope="col">Vai trò</th>
+                        <th scope="col">Thao tác</th>
                     </tr>
                 </thead>
                 <tbody>
