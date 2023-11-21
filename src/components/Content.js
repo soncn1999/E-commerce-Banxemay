@@ -106,8 +106,6 @@ function Content(props) {
         let productArr = [];
         let keyword = data.trim();
 
-        console.log('keyword >>> ', data.length);
-
         let productResult = listProduct.map((item, index) => {
             if (item.title.toLowerCase().includes(keyword)) {
                 productArr.push(item);
@@ -122,8 +120,6 @@ function Content(props) {
             setIsShowSearch(true);
         }
     }
-
-    console.log('is show search >>> ', isShowSearch);
 
     return (
         <>

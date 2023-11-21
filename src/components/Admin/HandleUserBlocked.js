@@ -96,11 +96,11 @@ function HandleUserBlocked(props) {
             {/* Search Container */}
             <div className="search-wrapper">
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control form-control--display" style={{ fontSize: '14px' }} placeholder="Search by Email/Phone Number"
+                    <input type="text" class="form-control form-control--display" style={{ fontSize: '14px' }} placeholder="Tìm kiếm bằng email/số điện thoại"
                         aria-label="Search by Email/Phone Number" aria-describedby="basic-addon2" onChange={(event) => handleSearchUser(event.target.value)} />
                     &nbsp;
                     <div class="input-group-append">
-                        <button class="btn btn-primary" style={{ marginTop: '0', fontSize: '14px' }} type="button">Search User</button>
+                        <button class="btn btn-primary" style={{ marginTop: '0', fontSize: '14px' }} type="button">Tìm kiếm</button>
                     </div>
                 </div>
 

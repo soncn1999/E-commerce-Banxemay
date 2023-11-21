@@ -6,6 +6,8 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { deleteProductApi } from '../../services/product';
 import Swal from 'sweetalert2';
 import ReactPaginate from 'react-paginate';
+import './Search-Style/style.scss';
+import { formatter } from '../../utils/helper';
 
 HandleProductInfo.propTypes = {
 
@@ -16,6 +18,9 @@ function HandleProductInfo(props) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editId, setEditId] = useState('');
     const [pageInfo, setPageInfo] = useState({});
+    const [productFindingResult, setProductFindingResult] = useState([]);
+    const [isOpenSearch, setIsOpenSearch] = useState(false);
+
     useEffect(() => {
         getAllProduct(1);
     }, []);
@@ -95,8 +100,81 @@ function HandleProductInfo(props) {
         await getAllProduct(event.selected + 1)
     };
 
+    const handleSearchProduct = (data) => {
+        const keyword = data.trim().toLowerCase();
+
+        let productResult = [];
+        let productFilter = listProduct.product.map((item) => {
+            if (item.title.toLowerCase().includes(keyword)) {
+                productResult.push(item);
+            }
+        });
+
+        if (productResult.length == listProduct.product.length) {
+            setIsOpenSearch(false);
+            setProductFindingResult([]);
+        } else {
+            setIsOpenSearch(true);
+            setProductFindingResult(productResult);
+        }
+    }
+
     return (
         <>
+            <div className="search-wrapper">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control form-control--display" style={{ fontSize: '14px' }} placeholder="Tìm kiếm theo tên sản phẩm"
+                        aria-label="Tìm kiếm theo tên sản phẩm" aria-describedby="basic-addon2" onChange={(event) => handleSearchProduct(event.target.value)} />
+                    &nbsp;
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" style={{ marginTop: '0', fontSize: '14px' }} type="button">Tìm sản phẩm</button>
+                    </div>
+                </div>
+
+                {
+                    isOpenSearch && productFindingResult && productFindingResult.length > 0 && (
+                        <div className="search-result-box">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Tên</th>
+                                    <th scope="col">Giá bán</th>
+                                    <th scope="col">Số lượng</th>
+                                    <th scope="col">Đã bán</th>
+                                    <th scope="col">Trạng thái</th>
+                                    <th scope="col">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {
+                                    productFindingResult && productFindingResult.length > 0 && productFindingResult.map((item) => {
+                                        return (
+                                            <tr key={item._id}>
+                                                <td>{item.title}</td>
+                                                <td>{formatter.format(item.price)}</td>
+                                                <td>{item.quantity}</td>
+                                                <td>{item.sold}</td>
+                                                <td scope="row" style={{ fontWeight: '550' }}>{item.isRevoked ? `Thu hồi` : `Đang kinh doanh`}</td>
+                                                <td>
+                                                    <Button color="info" style={{ marginTop: 0 }} onClick={() => handleOpenModal(item._id)}>
+                                                        <i class="fa-solid fa-pen-to-square"></i>
+                                                    </Button>
+                                                    {
+                                                        editId && isModalOpen && <ModalEditProduct handleIsOpenned={handleIsOpenned} editId={editId} />
+                                                    }
+                                                    <button style={{ marginTop: '5px' }} type="button" class="btn btn-danger" onClick={() => handleDeleteProduct(item._id)}>
+                                                        <i class="fa-solid fa-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        )
+                                    })
+                                }
+                            </tbody>
+
+                        </div>
+                    )
+                }
+            </div>
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -119,7 +197,7 @@ function HandleProductInfo(props) {
                                         <th scope="row">{index + 1}</th>
                                         <td scope="row">{item.title}</td>
                                         <td scope="row">{item.brand}</td>
-                                        <td scope="row">{item.price}</td>
+                                        <td scope="row">{formatter.format(item.price)}</td>
                                         <td scope="row">{item.quantity}</td>
                                         <td scope="row">{item.sold}</td>
                                         <td scope="row" style={{ fontWeight: '550' }}>{item.isRevoked ? `Thu hồi` : `Đang kinh doanh`}</td>
