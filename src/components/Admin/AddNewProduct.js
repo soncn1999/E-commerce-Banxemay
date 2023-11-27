@@ -57,7 +57,6 @@ function AddNewProduct(props) {
     }
 
     const handleSubmitForm = async () => {
-        console.log('Product >>> ', product);
         let { previewImgUrl, files, ...dataCopy } = product;
 
         const response = await createNewProductApi(dataCopy);

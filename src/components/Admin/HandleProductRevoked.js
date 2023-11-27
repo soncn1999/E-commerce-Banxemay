@@ -9,14 +9,14 @@ import ReactPaginate from 'react-paginate';
 import './Search-Style/style.scss';
 import { formatter } from '../../utils/helper';
 
-HandleProductInfo.propTypes = {
+HandleProductRevoked.propTypes = {
 
 };
 
-function HandleProductInfo(props) {
+function HandleProductRevoked(props) {
     const [listProduct, setListProduct] = useState({});
-    const [listProductSearch, setListProductSearch] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [listProductSearch, setListProductSearch] = useState([]);
     const [editId, setEditId] = useState('');
     const [pageInfo, setPageInfo] = useState({});
     const [productFindingResult, setProductFindingResult] = useState([]);
@@ -29,7 +29,7 @@ function HandleProductInfo(props) {
 
     const getAllProduct = async (pageNumber) => {
         let response = await getAllProductApi(pageNumber);
-
+        console.log('check list product >>> ', response);
         if (response && response.success) {
             let { success, ...productCopy } = response;
             const { total, page } = response;
@@ -39,7 +39,6 @@ function HandleProductInfo(props) {
             })
         }
     }
-
     const getAllProductForSearch = async () => {
         let response = await getAllProductForSearchApi();
 
@@ -157,7 +156,7 @@ function HandleProductInfo(props) {
                             <tbody>
                                 {
                                     productFindingResult && productFindingResult.length > 0 && productFindingResult.map((item) => {
-                                        if (!item.isRevoked) {
+                                        if (item.isRevoked) {
                                             return (
                                                 <tr key={item._id}>
                                                     <td>{item.title}</td>
@@ -179,6 +178,7 @@ function HandleProductInfo(props) {
                                                 </tr>
                                             )
                                         }
+
                                     })
                                 }
                             </tbody>
@@ -197,14 +197,13 @@ function HandleProductInfo(props) {
                         <th scope="col">Số lượng</th>
                         <th scope="col">Đã bán</th>
                         <th scope="col">Trạng thái</th>
-                        <th scope="col">Thể loại</th>
-                        <th scope="col">Thao tác</th>
+                        {/* <th scope="col">Thao tác</th> */}
                     </tr>
                 </thead>
                 <tbody>
                     {
                         listProduct && listProduct.product?.length > 0 && listProduct.product.map((item, index) => {
-                            if (!item.isRevoked) {
+                            if (item.isRevoked) {
                                 return (
                                     <Fragment>
                                         <tr key={item._id}>
@@ -215,18 +214,17 @@ function HandleProductInfo(props) {
                                             <td scope="row">{item.quantity}</td>
                                             <td scope="row">{item.sold}</td>
                                             <td scope="row" style={{ fontWeight: '550' }}>{item.isRevoked ? `Thu hồi` : `Đang kinh doanh`}</td>
-                                            <td scope="row">{item.category}</td>
-                                            <td scope="row">
-                                                <Button color="info" style={{ marginTop: 0 }} onClick={() => handleOpenModal(item._id)}>
-                                                    <i class="fa-solid fa-pen-to-square"></i>
-                                                </Button>
-                                                {
-                                                    editId && isModalOpen && <ModalEditProduct handleIsOpenned={handleIsOpenned} editId={editId} />
-                                                }
-                                                <button style={{ marginTop: '5px' }} type="button" class="btn btn-danger" onClick={() => handleDeleteProduct(item._id)}>
-                                                    <i class="fa-solid fa-trash"></i>
-                                                </button>
-                                            </td>
+                                            {/* <td scope="row">
+                                            <Button color="info" style={{ marginTop: 0 }} onClick={() => handleOpenModal(item._id)}>
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </Button>
+                                            {
+                                                editId && isModalOpen && <ModalEditProduct handleIsOpenned={handleIsOpenned} editId={editId} />
+                                            }
+                                            <button style={{ marginTop: '5px' }} type="button" class="btn btn-danger" onClick={() => handleDeleteProduct(item._id)}>
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </td> */}
                                         </tr>
                                     </Fragment>
                                 )
@@ -263,4 +261,4 @@ function HandleProductInfo(props) {
     );
 }
 
-export default HandleProductInfo;
+export default HandleProductRevoked;

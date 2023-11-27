@@ -102,6 +102,10 @@ function Sidebar(props) {
                         <Link to={`${path.LIST_PRODUCTS}`} class="collapse-item" style={{ cursor: 'pointer' }}>
                             Quản lý danh sách SP
                         </Link>
+
+                        <Link to={`${path.LIST_REVOKED}`} class="collapse-item" style={{ cursor: 'pointer' }}>
+                            Quản lý DS thu hồi
+                        </Link>
                     </div>
                 </div>
             </li>

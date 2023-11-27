@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Footer, Header } from '../../components';
 import './public-style/Order.scss';
 import payment from '../../assets/order/WomanShoppingOnline.gif';
+import deliveryboy from '../../assets/order/DeliveryBoy.gif';
 import { formatter } from '../../utils/helper';
 import path from '../../utils/path';
 import Swal from 'sweetalert2';
@@ -12,7 +13,7 @@ import './public-style/Cart.css';
 import PayPal from './PayPal';
 import axios from 'axios';
 import { updateAddress } from '../../store/userSlice';
-import { updateUserApi } from '../../services/user';
+import { updateUserApi, handleCheckOutProduct, updateCartProductResetApi } from '../../services/user';
 import { emitter } from '../../utils/Emitter';
 import { getCurrentUserRedux } from '../../store/asyncActions';
 
@@ -148,7 +149,17 @@ function Order(props) {
     }
 
     const handleConfirmAddress = async () => {
-        let userAddress = `${address.residence}, ${address.commune}, ${address.district}, ${address.province}`;
+        if (!address.residence.length > 0 || !address.commune.length > 0 || !address.district.length > 0 || !address.province.length > 0) {
+            Swal.fire({
+                position: "top-end",
+                icon: "error",
+                title: "Bạn đã nhập thiếu thông tin đặt hàng!",
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return;
+        }
+        let userAddress = `${address.residence} - ${address.commune} - ${address.district} - ${address.province}`;
         dispatch(updateAddress(userAddress));
         let response = await updateUserApi({
             address: userAddress
@@ -172,7 +183,61 @@ function Order(props) {
         }
     }
 
-    console.log('check state >>> ', addressUser);
+    const handleOderCOD = () => {
+        Swal.fire({
+            title: "Bạn muốn đặt hàng?",
+            text: "Hãy xác nhận!",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Xác nhận đặt hàng"
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                if (!address.residence.length > 0 || !address.commune.length > 0 || !address.district.length > 0 || !address.province.length > 0) {
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "error",
+                        title: "Bạn đã nhập thiếu thông tin đặt hàng!",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    return;
+                }
+            }
+            let response = await handleCheckOutProduct({
+                totalItem: totalProduct,
+                status: 'Processing',
+                isCheckOut: false
+            });
+            if (response && response.success) {
+                await updateCartProductResetApi();
+                Swal.fire({
+                    title: "Bạn đã đặt hàng thành công, đơn hàng sẽ được vận chuyển.",
+                    width: 600,
+                    padding: "3em",
+                    color: "#716add",
+                    background: `#fff url(/images/trees.png)`,
+                    backdrop: `
+                      rgba(0,0,123,0.4)
+                      url("/images/nyan-cat.gif")
+                      left top
+                      no-repeat
+                    `
+                });
+                dispatch(getCurrentUserRedux(user_id));
+                navigate(`/`);
+            } else {
+                Swal.fire({
+                    position: "top-end",
+                    icon: "error",
+                    title: "Có lỗi, Bạn hãy thử lại hoặc liên hệ quản trị!",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        });
+    }
 
     return (
         <>
@@ -220,6 +285,12 @@ function Order(props) {
                                     </div>
 
                                     <div style={{ paddingBottom: '5px', cursor: 'pointer' }}><h4><b>PHƯƠNG THỨC THANH TOÁN</b></h4></div>
+
+                                    <button type="button" class="btn btn-primary btn-lg mb-3 mt-0" style={{ fontWeight: 550 }} onClick={() => handleOderCOD()}>
+                                        <i class="fa-solid fa-truck-fast"></i>
+                                        &nbsp;
+                                        Thanh toán khi nhận hàng
+                                    </button>
 
                                     <div>
                                         <PayPal

@@ -6,6 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import path from '../utils/path';
 import { useSelector, useDispatch } from 'react-redux';
 import { getCurrentUserRedux, handleLogoutRedux } from '../store/asyncActions';
+import { getAllProductApi, getListBrandApi, getListProductRelateBrandApi, getListProductSortByPriceApi, getAllCategoryApi, getProductByCategoryApi, getAllProductForSearchApi } from '../services/product';
 import Swal from 'sweetalert2';
 import { GiDeliveryDrone } from 'react-icons/gi';
 import { PiSteeringWheelFill } from 'react-icons/pi';
@@ -25,6 +26,10 @@ function Header(props) {
     const user_id = useSelector((state) => state.user.id);
     const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
     const userCurrent = useSelector((state) => state.user);
+    const [listProduct, setListProduct] = useState({});
+    const [brand, setBrand] = useState([]);
+    const [listCategory, setListCategory] = useState([]);
+
 
     useEffect(() => {
         //User Refresh
@@ -43,7 +48,9 @@ function Header(props) {
         //     });
         //     navigate(`/${path.LOGIN}`);
         // }
-
+        getListBrand();
+        getListCategoryApi();
+        // getProductByCategory();
         return () => {
             // if (!isLoggedIn) {
             //     navigate(`/${path.LOGIN}`);
@@ -77,7 +84,44 @@ function Header(props) {
         }
     }
 
+    const getListBrand = async () => {
+        let response = await getListBrandApi();
+        if (response && response.success) {
+            let { data } = response;
+            setBrand(data);
+        }
+        console.log('brand >>> ', response.data);
+    }
+
+    const getListCategoryApi = async () => {
+        let response = await getAllCategoryApi();
+        if (response && response.success) {
+            let { productCategories } = response;
+            if (productCategories?.length > 0) {
+                setListCategory(productCategories);
+            }
+        }
+        console.log('list categories >>> ', response.productCategories)
+    }
+
+    // const getProductByCategory = async (data) => {
+    //     console.log('data >>> ', data);
+    //     let response = await getProductByCategoryApi(data);
+    //     if (response && response.success) {
+    //         const { success, total, page, product } = response;
+    //         setListProduct(product);
+    //         setPageInfo({
+    //             total, page
+    //         })
+    //     }
+    // }
+
     // console.log('set show quantity cart >>> ', showQuantityOrder);
+
+    const handleGetProductByOption = (type, title) => {
+        console.log('Type >>> ', type, 'title >>> ', title);
+        navigate(`/${path.PRODUCTS_FILTER}/${type}=${title}`);
+    }
 
     return (
         <div className="header fixed-top" >
@@ -95,8 +139,30 @@ function Header(props) {
                             <Link to={`/${path.HOME}`} style={{ color: '#fff' }}>
                                 TRANG CHỦ
                             </Link></li>
-                        <li className="header-above__item">HÃNG XE</li>
-                        <li className="header-above__item">DÒNG XE</li>
+                        <li className="header-above__item">
+                            HÃNG XE
+                            <div className="header-above__submenu">
+                                <ul className="header-above__submenu-list">
+                                    {
+                                        brand && brand.length > 0 && brand.map((item) => {
+                                            return <li className="header-above__submenu-item" onClick={() => handleGetProductByOption('brand', item.title)}>{item.title}</li>
+                                        })
+                                    }
+                                </ul>
+                            </div>
+                        </li>
+                        <li className="header-above__item">
+                            DÒNG XE
+                            <div className="header-above__submenu">
+                                <ul className="header-above__submenu-list">
+                                    {
+                                        listCategory && listCategory.length > 0 && listCategory.map((item) => {
+                                            return <li className="header-above__submenu-item" onClick={() => handleGetProductByOption('category', item.title)}>{item.title}</li>
+                                        })
+                                    }
+                                </ul>
+                            </div>
+                        </li>
                         <li className="header-above__item">TIN TỨC</li>
                         <li className="header-above__item">TÌM ĐẠI LÝ</li>
                         <li className="header-above__item">LIÊN HỆ</li>
@@ -115,7 +181,7 @@ function Header(props) {
                                     ĐĂNG KÝ
                                 </li>
                                 {
-                                    userCurrent && userCurrent?.current?.role != "user" &&
+                                    userCurrent && userCurrent?.current?.role && userCurrent?.current?.role != "user" &&
                                     <li className="header-above__item__submenu-item" onClick={() => navigate(`/${path.PRIVATE}`)}>
                                         TRANG ADMIN
                                     </li>

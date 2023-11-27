@@ -88,13 +88,16 @@ function Cart(props) {
         let { _id, color } = cartArrCopy[index];
         let product_id = cartArrCopy[index].product._id;
 
-        console.log('check cart ITEM >>>> ', cartArrCopy[index], 'product >>> ', product_id);
-
         const productQuantity = cartArrCopy[index].product.quantity;
 
+        console.log('Cart duoc chon >>> ', cartArrCopy[index], " + ", product_id);
+
         if (cartArrCopy.length > 0) {
+            //Biến cart item đang thay đổi số lượng
             let cartArrItem = { ...cartArrCopy[index] };
+            //Biến số lượng tương ứng với cart item trên
             let quantityTemp = cartArrItem.quantity;
+            //Biến số lượng đang được thay đổi tăng/giảm
             quantityTemp = quantityTemp + operator;
 
             if (quantityTemp <= productQuantity && quantityTemp > 0) {
@@ -104,18 +107,20 @@ function Cart(props) {
 
                 setUserCart(cartArrCopy);
 
-                let response = await updateCartEditDetailApi({
-                    _id: _id,
-                    product: product_id,
+                console.log('Check Cart >>>> ', {
+                    _id: cartArrCopy[index]._id,
+                    product: cartArrCopy[index].product._id,
                     quantity: quantityTemp,
                     color: color
                 });
 
-                console.log('check response update cart item >>> ', response);
+                let response = await updateCartEditDetailApi({
+                    _id: cartArrCopy[index]._id,
+                    product: cartArrCopy[index].product._id,
+                    quantity: quantityTemp,
+                    color: color
+                });
 
-                // if (response && response.success) {
-                //     dispatch(changeUserCart(cartArrCopy));
-                // }
                 dispatch(changeUserCart(cartArrCopy));
             } else {
                 Swal.fire({

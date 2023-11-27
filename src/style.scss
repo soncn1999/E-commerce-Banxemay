@@ -85,7 +85,7 @@ html {
         &__item {
             line-height: 45px;
             padding: 0 20px;
-            clip-path: polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%);
+            // clip-path: polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%);
             position: relative;
             & a {
                 text-decoration: none;
@@ -94,8 +94,12 @@ html {
             &:hover {
                 background-color: #e5091c;
                 cursor: pointer;
+                border-radius: 5px;
             }
             &:hover .header-above__item__submenu-user {
+                display: block;
+            }
+            &:hover .header-above__submenu {
                 display: block;
             }
             &__submenu-user {
@@ -129,6 +133,27 @@ html {
                 justify-content: center;
                 & span {
                     font-size: 14px;
+                }
+            }
+        }
+        &__submenu {
+            display: none;
+            background-color: #1c1c1c;
+            color: #fff;
+            position: absolute;
+            left: 0;
+            border-radius: 5px;
+            &-list {
+                list-style-type: none;
+                padding: 0;
+            }
+            &-item {
+                text-decoration: none;
+                padding: 0px 11px;
+                width: 100px;
+                &:hover {
+                    background-color: #e5091c;
+                    border-radius: 5px;
                 }
             }
         }

@@ -49,8 +49,9 @@ function ModalEditProduct(props) {
             let { title,
                 description,
                 brand,
-                price, quantity, category } = response.data;
-            setProduct({ title, description, brand, price, quantity, category });
+                price, quantity, category, image } = response.data;
+            console.log('check product data >>> ', response);
+            setProduct({ title, description, brand, price, quantity, category, previewImgUrl: image[0] });
             setDescription(description);
         }
     }

@@ -63,30 +63,30 @@ function HandleUserBlocked(props) {
     const handleSearchUser = (data) => {
         let keyword = data.trim();
         let itemIndex = 0;
-        if (keyword.includes('@')) {
-            itemIndex = 0;
-            let userResult = listUser.map((user, index) => {
-                if (user.email.includes(keyword)) {
-                    itemIndex = index;
-                    return;
-                }
-            });
+        // if (keyword.includes('@')) {
+        //     itemIndex = 0;
+        //     let userResult = listUser.map((user, index) => {
+        //         if (user.email.includes(keyword)) {
+        //             itemIndex = index;
+        //             return;
+        //         }
+        //     });
 
-            console.log('User by Email>>>> ', listUser[itemIndex]);
-            let userArr = [];
-            userArr.push(listUser[itemIndex])
-            setUserFindingResult(userArr);
-        } else if (keyword == '') {
+        //     console.log('User by Email>>>> ', listUser[itemIndex]);
+        //     let userArr = [];
+        //     userArr.push(listUser[itemIndex])
+        //     setUserFindingResult(userArr);
+        // } else 
+        if (keyword == '') {
             setUserFindingResult([]);
         } else {
             let userArrFinding = [];
             let userResult = listUser.map((user, index) => {
-                if (user.mobile.includes(keyword)) {
+                if (user.email.includes(keyword)) {
                     userArrFinding.push(user);
                 }
             });
 
-            console.log('User by Phone>>>> ', userArrFinding);
             setUserFindingResult(userArrFinding);
         }
     }
@@ -119,22 +119,24 @@ function HandleUserBlocked(props) {
                             <tbody>
                                 {
                                     userFindingResult && userFindingResult.length > 0 && userFindingResult.map((item) => {
-                                        return (
-                                            <tr key={item._id}>
-                                                <td>{item.firstname} {item.lastname}</td>
-                                                <td>{item.email}</td>
-                                                <td>{item.mobile}</td>
-                                                <td>
-                                                    {item.role == 'admin' ? <strong style={{ color: 'red' }}>{item.role}</strong> : <span>{item.role}</span>}
-                                                </td>
-                                                <td>{
-                                                    !item.isBlocked ? (<strong>Active</strong>) : (<Button color="success" style={{ marginTop: 0 }} onClick={() => handleBlockUser(item._id)}>
-                                                        <i class="fa-solid fa-unlock"></i>
-                                                    </Button>)
-                                                }
-                                                </td>
-                                            </tr>
-                                        )
+                                        if (item.isBlocked) {
+                                            return (
+                                                <tr key={item._id}>
+                                                    <td>{item.firstname} {item.lastname}</td>
+                                                    <td>{item.email}</td>
+                                                    <td>{item.mobile}</td>
+                                                    <td>
+                                                        {item.role == 'admin' ? <strong style={{ color: 'red' }}>{item.role}</strong> : <span>{item.role}</span>}
+                                                    </td>
+                                                    <td>{
+                                                        !item.isBlocked ? (<strong>Active</strong>) : (<Button color="success" style={{ marginTop: 0 }} onClick={() => handleBlockUser(item._id)}>
+                                                            <i class="fa-solid fa-unlock"></i>
+                                                        </Button>)
+                                                    }
+                                                    </td>
+                                                </tr>
+                                            )
+                                        }
                                     })
                                 }
                             </tbody>

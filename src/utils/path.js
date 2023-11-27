@@ -5,6 +5,7 @@ const path = {
     LOGIN: 'login',
     REGISTER: 'register',
     PRODUCTS: 'products',
+    PRODUCTS_FILTER: 'products_filter',
     BLOGS: 'blog',
     OUR_SERVICES: 'out-services',
     QRQS: 'qrqs',
@@ -24,6 +25,7 @@ const path = {
     ORDER_INCOMPLETE: 'order-incomplete',
     ORDER_COMPLETE: 'order-complete',
     ORDER_CANCELLED: 'order-cancelled',
+    LIST_REVOKED: 'list-revoked',
 }
 
 export default path;

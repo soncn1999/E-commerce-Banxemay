@@ -5,8 +5,9 @@ import './css/styles.css';
 import { Route, Routes } from 'react-router-dom';
 import { Login, Home, Public, Register, Cart, Detail, Order } from './pages/public';
 import { Private } from './pages/private';
-import { AddNewBrand, AddNewCategory, AddNewProduct, AddSysUserByAdmin, HandleBrandInfo, HandleCategoryInfo, HandleProductInfo, HandleUserAdminInfo, HandleUserBlocked, HandleUserInfo, ListOrderCancel, ListOrderComplete, ListOrderIncomplete } from './components';
+import { AddNewBrand, AddNewCategory, AddNewProduct, AddSysUserByAdmin, HandleBrandInfo, HandleCategoryInfo, HandleProductInfo, HandleProductRevoked, HandleUserAdminInfo, HandleUserBlocked, HandleUserInfo, ListOrderCancel, ListOrderComplete, ListOrderIncomplete } from './components';
 import path from './utils/path';
+import ContentFilter from './components/ContentFilter';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path={path.REGISTER} element={<Register />} />
           <Route path={path.CART} element={<Cart />} />
           <Route path={`/${path.PRODUCTS}/:pid`} element={<Detail />} />
+          <Route path={`/${path.PRODUCTS_FILTER}/:option`} element={<ContentFilter />} />
           <Route path={path.ORDER} element={<Order />} />
         </Route>
         <Route path={path.PRIVATE} element={<Private />}>
@@ -34,6 +36,7 @@ function App() {
           <Route path={path.ORDER_COMPLETE} element={<ListOrderComplete />} />
           <Route path={path.ORDER_INCOMPLETE} element={<ListOrderIncomplete />} />
           <Route path={path.ORDER_CANCELLED} element={<ListOrderCancel />} />
+          <Route path={path.LIST_REVOKED} element={<HandleProductRevoked />} />
         </Route>
       </Routes>
     </div>

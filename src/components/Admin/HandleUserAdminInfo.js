@@ -61,26 +61,12 @@ function HandleUserAdminInfo(props) {
 
     const handleSearchUser = (data) => {
         let keyword = data.trim();
-        let itemIndex = 0;
-        if (keyword.includes('@')) {
-            itemIndex = 0;
-            let userResult = listUser.map((user, index) => {
-                if (user.email.includes(keyword)) {
-                    itemIndex = index;
-                    return;
-                }
-            });
-
-            console.log('User by Email>>>> ', listUser[itemIndex]);
-            let userArr = [];
-            userArr.push(listUser[itemIndex])
-            setUserFindingResult(userArr);
-        } else if (keyword == '') {
+        if (keyword == '') {
             setUserFindingResult([]);
         } else {
             let userArrFinding = [];
             let userResult = listUser.map((user, index) => {
-                if (user.mobile.includes(keyword)) {
+                if (user.email.includes(keyword)) {
                     userArrFinding.push(user);
                 }
             });
@@ -117,22 +103,24 @@ function HandleUserAdminInfo(props) {
                             <tbody>
                                 {
                                     userFindingResult && userFindingResult.length > 0 && userFindingResult.map((item) => {
-                                        return (
-                                            <tr key={item._id}>
-                                                <td>{item.firstname} {item.lastname}</td>
-                                                <td>{item.email}</td>
-                                                <td>{item.mobile}</td>
-                                                <td>
-                                                    {item.role == 'admin' ? <strong style={{ color: 'red' }}>{item.role}</strong> : <span>{item.role}</span>}
-                                                </td>
-                                                <td>{
-                                                    item.isBlocked ? (<strong>Blocked</strong>) : (<Button color="danger" style={{ marginTop: 0 }} onClick={() => handleBlockUser(item._id)}>
-                                                        <i class="fa-solid fa-lock"></i>
-                                                    </Button>)
-                                                }
-                                                </td>
-                                            </tr>
-                                        )
+                                        if (!item.isBlocked && item.role != 'user') {
+                                            return (
+                                                <tr key={item._id}>
+                                                    <td>{item.firstname} {item.lastname}</td>
+                                                    <td>{item.email}</td>
+                                                    <td>{item.mobile}</td>
+                                                    <td>
+                                                        {item.role == 'admin' ? <strong style={{ color: 'red' }}>{item.role}</strong> : <span>{item.role}</span>}
+                                                    </td>
+                                                    <td>{
+                                                        item.isBlocked ? (<strong>Blocked</strong>) : (<Button color="danger" style={{ marginTop: 0 }} onClick={() => handleBlockUser(item._id)}>
+                                                            <i class="fa-solid fa-lock"></i>
+                                                        </Button>)
+                                                    }
+                                                    </td>
+                                                </tr>
+                                            )
+                                        }
                                     })
                                 }
                             </tbody>
@@ -157,20 +145,22 @@ function HandleUserAdminInfo(props) {
                     {
                         listUser && listUser.length > 0 && listUser.map((item, index) => {
                             if (item.role !== 'user' && item.isBlocked == false) {
-                                return (
-                                    <tr key={item.id}>
-                                        <th scope="row">{index + 1}</th>
-                                        <td>{item.firstname} {item.lastname}</td>
-                                        <td>{item.email}</td>
-                                        <td>{item.mobile}</td>
-                                        <td>{item.role}</td>
-                                        <td>
-                                            <Button color="danger" style={{ marginTop: 0 }} onClick={() => handleBlockUser(item._id)}>
-                                                <i class="fa-solid fa-lock"></i>
-                                            </Button>
-                                        </td>
-                                    </tr>
-                                )
+                                if (!item.isBlocked && item.role != 'user') {
+                                    return (
+                                        <tr key={item._id}>
+                                            <th scope="row">{index + 1}</th>
+                                            <td>{item.firstname} {item.lastname}</td>
+                                            <td>{item.email}</td>
+                                            <td>{item.mobile}</td>
+                                            <td>{item.role}</td>
+                                            <td>
+                                                <Button color="danger" style={{ marginTop: 0 }} onClick={() => handleBlockUser(item._id)}>
+                                                    <i class="fa-solid fa-lock"></i>
+                                                </Button>
+                                            </td>
+                                        </tr>
+                                    )
+                                }
                             }
                         })
                     }

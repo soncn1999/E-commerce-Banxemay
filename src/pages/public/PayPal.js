@@ -44,8 +44,6 @@ const ButtonWrapper = ({ currency, showSpinner, amount, payload }) => {
 
                         payload.isCheckOut = true;
 
-                        console.log('check payload Paypal >>> ', payload);
-
                         let checkOutApiStatus = await handleCheckOutProduct({
                             totalItem: payload.totalItem,
                             status: payload.status,

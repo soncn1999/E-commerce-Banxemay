@@ -56,7 +56,7 @@ function ModalDetailOrder(props) {
                                             </div>
                                             &nbsp;
                                             <div className="col">
-                                                <div className="row text-muted" style={{ fontWeight: '550', fontSize: '12px' }}>Số lượng: {item.count}</div>
+                                                <div className="row text-muted" style={{ fontWeight: '550', fontSize: '12px' }}>Số lượng: {item?.count}</div>
                                             </div>
                                             <div className="col" style={{ fontWeight: '550', fontSize: '12px' }}>{formatter.format(item?.product?.price)}</div>
                                         </div>
@@ -68,7 +68,7 @@ function ModalDetailOrder(props) {
                             <div className="col" style={{
                                 fontSize: '15px',
                                 fontWeight: '550'
-                            }}>THANH TOÁN:</div>
+                            }}>THANH TOÁN: {orderDetail.totalItem} sản phẩm</div>
                             <div className="col text-right" style={{
                                 color: "red",
                                 fontSize: "15px",

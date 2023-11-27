@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './Content-style/style.css';
-import { getAllProductApi, getListBrandApi, getListProductRelateBrandApi, getListProductSortByPriceApi, getAllCategoryApi, getProductByCategoryApi } from '../services/product';
+import { getAllProductApi, getListBrandApi, getListProductRelateBrandApi, getListProductSortByPriceApi, getAllCategoryApi, getProductByCategoryApi, getAllProductForSearchApi } from '../services/product';
 import { useNavigate } from 'react-router-dom';
 import { formatter } from '../utils/helper';
 import ReactPaginate from 'react-paginate';
@@ -18,11 +18,13 @@ function Content(props) {
     const [brand, setBrand] = useState([]);
     const [searchProduct, setSearchProduct] = useState([]);
     const [isShowSearch, setIsShowSearch] = useState(false);
+    const [listProductSearch, setListProductSearch] = useState([]);
 
     useEffect(() => {
         getAllProduct();
         getListBrand();
         getListCategoryApi();
+        getAllProductForSearch();
     }, []);
 
     const getAllProduct = async (page = 1) => {
@@ -33,6 +35,14 @@ function Content(props) {
             setPageInfo({
                 total, page
             })
+        }
+    }
+
+    const getAllProductForSearch = async () => {
+        let response = await getAllProductForSearchApi();
+
+        if (response && response.success) {
+            setListProductSearch(response.message);
         }
     }
 
@@ -102,18 +112,17 @@ function Content(props) {
     }
 
     const handleSearchProduct = (data) => {
-
         let productArr = [];
         let keyword = data.trim();
 
-        let productResult = listProduct.map((item, index) => {
+        let productResult = listProductSearch.map((item, index) => {
             if (item.title.toLowerCase().includes(keyword)) {
                 productArr.push(item);
                 return;
             }
         });
 
-        if (productArr.length == listProduct.length) {
+        if (productArr.length == listProductSearch.length) {
             setIsShowSearch(false);
         } else {
             setSearchProduct(productArr);
@@ -179,18 +188,20 @@ function Content(props) {
                                 isShowSearch && (<div className="form-search-result__wrapper">
                                     {
                                         searchProduct?.length > 0 && searchProduct.map((item) => {
-                                            return (
-                                                <div className="form-search-result" onClick={() => handleAccessDetail(item._id)}>
-                                                    <div className="form-search-result__item">
-                                                        <div className="form-search-result__item-img">
-                                                            <img class=""
-                                                                src={item?.image?.length > 0 ? item?.image[0] : `https://dummyimage.com/450x300/dee2e6/6c757d.jpg`} alt="..." />
+                                            if (!item.isRevoked) {
+                                                return (
+                                                    <div className="form-search-result" onClick={() => handleAccessDetail(item._id)}>
+                                                        <div className="form-search-result__item">
+                                                            <div className="form-search-result__item-img">
+                                                                <img class=""
+                                                                    src={item?.image?.length > 0 ? item?.image[0] : `https://dummyimage.com/450x300/dee2e6/6c757d.jpg`} alt="..." />
+                                                            </div>
+                                                            <div className="form-search-result__item-title">{item.title}</div>
+                                                            <div className="form-search-result__item-price">{formatter.format(item.price)}</div>
                                                         </div>
-                                                        <div className="form-search-result__item-title">{item.title}</div>
-                                                        <div className="form-search-result__item-price">{formatter.format(item.price)}</div>
                                                     </div>
-                                                </div>
-                                            )
+                                                )
+                                            }
                                         })
                                     }
                                 </div>)

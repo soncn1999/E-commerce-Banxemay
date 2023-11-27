@@ -63,25 +63,26 @@ function HandleUserInfo(props) {
     const handleSearchUser = (data) => {
         let keyword = data.trim();
         let itemIndex = 0;
-        if (keyword.includes('@')) {
-            itemIndex = 0;
-            let userResult = listUser.map((user, index) => {
-                if (user.email.includes(keyword)) {
-                    itemIndex = index;
-                    return;
-                }
-            });
+        // if (keyword.includes('@')) {
+        //     itemIndex = 0;
+        //     let userResult = listUser.map((user, index) => {
+        //         if (user.email.includes(keyword)) {
+        //             itemIndex = index;
+        //             return;
+        //         }
+        //     });
 
-            console.log('User by Email>>>> ', listUser[itemIndex]);
-            let userArr = [];
-            userArr.push(listUser[itemIndex])
-            setUserFindingResult(userArr);
-        } else if (keyword == '') {
+        //     console.log('User by Email>>>> ', listUser[itemIndex]);
+        //     let userArr = [];
+        //     userArr.push(listUser[itemIndex])
+        //     setUserFindingResult(userArr);
+        // } else 
+        if (keyword == '') {
             setUserFindingResult([]);
         } else {
             let userArrFinding = [];
             let userResult = listUser.map((user, index) => {
-                if (user.mobile.includes(keyword)) {
+                if (user.email.includes(keyword)) {
                     userArrFinding.push(user);
                 }
             });
@@ -96,7 +97,7 @@ function HandleUserInfo(props) {
             {/* Search Container */}
             <div className="search-wrapper">
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control form-control--display" style={{ fontSize: '14px' }} placeholder="Tìm kiếm bằng email/số điện thoại"
+                    <input type="text" class="form-control form-control--display" style={{ fontSize: '14px' }} placeholder="Tìm kiếm bằng email"
                         aria-label="Search by Email/Phone Number" aria-describedby="basic-addon2" onChange={(event) => handleSearchUser(event.target.value)} />
                     &nbsp;
                     <div class="input-group-append">
@@ -119,22 +120,24 @@ function HandleUserInfo(props) {
                             <tbody>
                                 {
                                     userFindingResult && userFindingResult.length > 0 && userFindingResult.map((item) => {
-                                        return (
-                                            <tr key={item._id}>
-                                                <td>{item.firstname} {item.lastname}</td>
-                                                <td>{item.email}</td>
-                                                <td>{item.mobile}</td>
-                                                <td>
-                                                    {item.role == 'admin' ? <strong style={{ color: 'red' }}>{item.role}</strong> : <span>{item.role}</span>}
-                                                </td>
-                                                <td>{
-                                                    !item.isBlocked ? (<Button color="danger" style={{ marginTop: 0 }} onClick={() => handleBlockUser(item._id)}>
-                                                        <i class="fa-solid fa-lock"></i>
-                                                    </Button>) : (<strong>Blocked</strong>)
-                                                }
-                                                </td>
-                                            </tr>
-                                        )
+                                        if (!item.isBlocked && item.role == 'user') {
+                                            return (
+                                                <tr key={item._id}>
+                                                    <td>{item.firstname} {item.lastname}</td>
+                                                    <td>{item.email}</td>
+                                                    <td>{item.mobile}</td>
+                                                    <td>
+                                                        {item.role == 'admin' ? <strong style={{ color: 'red' }}>{item.role}</strong> : <span>{item.role}</span>}
+                                                    </td>
+                                                    <td>{
+                                                        !item.isBlocked ? (<Button color="danger" style={{ marginTop: 0 }} onClick={() => handleBlockUser(item._id)}>
+                                                            <i class="fa-solid fa-lock"></i>
+                                                        </Button>) : (<strong>Blocked</strong>)
+                                                    }
+                                                    </td>
+                                                </tr>
+                                            )
+                                        }
                                     })
                                 }
                             </tbody>
@@ -158,7 +161,7 @@ function HandleUserInfo(props) {
                 <tbody>
                     {
                         listUser && listUser.length > 0 && listUser.map((item, index) => {
-                            if (item.role !== 'admin' && item.isBlocked == false) {
+                            if (item.role == 'user' && item.isBlocked == false) {
                                 return (
                                     <tr key={item._id}>
                                         <th scope="row">{index + 1}</th>
