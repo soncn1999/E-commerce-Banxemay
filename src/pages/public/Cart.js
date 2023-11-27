@@ -114,12 +114,22 @@ function Cart(props) {
                     color: color
                 });
 
-                let response = await updateCartEditDetailApi({
-                    _id: cartArrCopy[index]._id,
-                    product: cartArrCopy[index].product._id,
-                    quantity: quantityTemp,
-                    color: color
-                });
+                if (cartArrCopy[index]._id) {
+                    let response = await updateCartEditDetailApi({
+                        _id: cartArrCopy[index]._id,
+                        product: cartArrCopy[index].product._id,
+                        quantity: quantityTemp,
+                        color: color
+                    });
+                } else {
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "error",
+                        title: "Hãy tải lại trang",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
 
                 dispatch(changeUserCart(cartArrCopy));
             } else {

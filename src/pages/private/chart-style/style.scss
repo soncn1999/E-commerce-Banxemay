@@ -1,0 +1,33 @@
+.chart {
+    &-container {
+        display: flex;
+        width: 100vw;
+    }
+    &-left {
+        width: 20%;
+        margin-right: 50px;
+    }
+    &-right {
+        width: 40%;
+    }
+    &-desc {
+        padding-top: 10px;
+        text-align: center;
+        font-weight: 550;
+    }
+}
+
+.statistical-container {
+    height: 50vh;
+    background-color: #f5f5f5;
+    float: left;
+    margin-bottom: 50px;
+    margin-left: 22px;
+    margin-top: 40px;
+    overflow-y: scroll;
+    border: 1px solid rgba(255, 99, 132, 1);
+    &__title {
+        font-weight: 550;
+        padding: 10px 5px;
+    }
+}

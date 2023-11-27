@@ -4,7 +4,7 @@ import './style.scss';
 import './css/styles.css';
 import { Route, Routes } from 'react-router-dom';
 import { Login, Home, Public, Register, Cart, Detail, Order } from './pages/public';
-import { Private } from './pages/private';
+import { ChartComponent, Private } from './pages/private';
 import { AddNewBrand, AddNewCategory, AddNewProduct, AddSysUserByAdmin, HandleBrandInfo, HandleCategoryInfo, HandleProductInfo, HandleProductRevoked, HandleUserAdminInfo, HandleUserBlocked, HandleUserInfo, ListOrderCancel, ListOrderComplete, ListOrderIncomplete } from './components';
 import path from './utils/path';
 import ContentFilter from './components/ContentFilter';
@@ -37,6 +37,7 @@ function App() {
           <Route path={path.ORDER_INCOMPLETE} element={<ListOrderIncomplete />} />
           <Route path={path.ORDER_CANCELLED} element={<ListOrderCancel />} />
           <Route path={path.LIST_REVOKED} element={<HandleProductRevoked />} />
+          <Route path={path.CHART} element={<ChartComponent />} />
         </Route>
       </Routes>
     </div>

@@ -132,7 +132,12 @@ const getProductByCategoryApi = (category) => axios({
 const getAllProductForSearchApi = () => axios({
     url: `/product/getallproductforsearch`,
     method: 'get',
-})
+});
+
+const getProductBestSeller = (operator) => axios({
+    url: `/product/getallproduct/?sort=${operator}sold`,
+    method: 'get',
+});
 
 export {
     getAllProductApi, getDetailProductApi, createNewProductApi, uploadImageProductApi, updateProductApi,
@@ -140,5 +145,5 @@ export {
     getDetailProductCategoryApi, handleUpdateCategoryApi, handleGetDetailBrandApi, handleUpdateBrandApi,
     handleDeleteBrandApi, getListProductRelateBrandApi, getListProductSortByPriceApi, handleDeleteCategoryApi,
     handleGetListOrderApi, updateOrderApi, getDetailOrderApi, getProductByCategoryApi, updateOrderPaymentApi,
-    getAllProductForSearchApi
+    getAllProductForSearchApi, getProductBestSeller
 };

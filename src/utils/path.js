@@ -26,6 +26,7 @@ const path = {
     ORDER_COMPLETE: 'order-complete',
     ORDER_CANCELLED: 'order-cancelled',
     LIST_REVOKED: 'list-revoked',
+    CHART: 'chart',
 }
 
 export default path;

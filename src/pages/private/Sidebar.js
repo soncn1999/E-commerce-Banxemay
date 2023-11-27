@@ -27,10 +27,15 @@ function Sidebar(props) {
 
             {/* <!-- Sidebar - Brand --> */}
             <Link class="sidebar-brand d-flex align-items-center justify-content-center" to={`/${path.HOME}`}>
-                <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
-                </div>
-                <div class="sidebar-brand-text mx-3">Bach Tung</div>
+                <div className="thanh-logo" style={{
+                    backgroundImage: `url(http://localhost:3000/static/media/bachtunglogo.b7954ed04877a251ae8d.png)`,
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                    backgroundSize: "cover",
+                    width: "201px",
+                    height: "45px",
+                    borderRadius: '10px'
+                }}></div>
             </Link>
 
             {/* <!-- Divider --> */}
@@ -39,8 +44,11 @@ function Sidebar(props) {
             {/* <!-- Nav Item - Dashboard --> */}
             <li class="nav-item active">
                 <div class="nav-link collapsed">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span class="collapse-item" onClick={() => navigate(`/${path.PRIVATE}`)} style={{ cursor: 'pointer' }}>Trang quản lý</span>
+                    <span class="collapse-item" onClick={() => navigate(`/${path.PRIVATE}`)} style={{ cursor: 'pointer' }}>
+                        <i class="fa-solid fa-house-user"></i>
+                        &nbsp;
+                        Trang quản lý
+                    </span>
                 </div>
             </li>
 
@@ -54,7 +62,7 @@ function Sidebar(props) {
                         </div>
                         <li class="nav-item">
                             <div class="nav-link collapsed" style={{ cursor: 'pointer' }} id="menu-title-1" onClick={() => handleToggle('menu-title-1')}>
-                                <i class="fas fa-fw fa-cog"></i>
+                                <i class="fa-regular fa-pen-to-square"></i>
                                 <span>Chỉnh sửa thông tin</span>
                             </div>
                             <div class="collapse" id="submenu-title-1">
@@ -89,7 +97,7 @@ function Sidebar(props) {
             </div>
             <li class="nav-item">
                 <div class="nav-link collapsed" style={{ cursor: 'pointer' }} id="menu-title-3" onClick={() => handleToggle('menu-title-3')}>
-                    <i class="fas fa-fw fa-cog"></i>
+                    <i class="fa-regular fa-pen-to-square"></i>
                     <span>Chỉnh sửa thông tin</span>
                 </div>
                 <div class="collapse" id="submenu-title-3">
@@ -116,7 +124,7 @@ function Sidebar(props) {
             </div>
             <li class="nav-item">
                 <div class="nav-link collapsed" style={{ cursor: 'pointer' }} id="menu-title-4" onClick={() => handleToggle('menu-title-4')}>
-                    <i class="fas fa-fw fa-cog"></i>
+                    <i class="fa-regular fa-pen-to-square"></i>
                     <span>Chỉnh sửa thông tin</span>
                 </div>
                 <div class="collapse" id="submenu-title-4">
@@ -139,8 +147,8 @@ function Sidebar(props) {
             </div>
             <li class="nav-item">
                 <div class="nav-link collapsed" style={{ cursor: 'pointer' }} id="menu-title-5" onClick={() => handleToggle('menu-title-5')}>
-                    <i class="fas fa-fw fa-cog"></i>
-                    <span>Chỉnh sửa thông tin</span>
+                    <i class="fa-regular fa-pen-to-square"></i>
+                    <span>Quản lý hãng sản xuất</span>
                 </div>
                 <div class="collapse" id="submenu-title-5">
                     <div class="bg-white py-2 collapse-inner rounded">
@@ -162,8 +170,8 @@ function Sidebar(props) {
             </div>
             <li class="nav-item">
                 <div class="nav-link collapsed" style={{ cursor: 'pointer' }} id="menu-title-6" onClick={() => handleToggle('menu-title-6')}>
-                    <i class="fas fa-fw fa-cog"></i>
-                    <span>Danh sách đơn hàng</span>
+                    <i class="fa-regular fa-pen-to-square"></i>
+                    <span>Quản lý đơn hàng</span>
                 </div>
                 <div class="collapse" id="submenu-title-6">
                     <div class="bg-white py-2 collapse-inner rounded">
@@ -176,6 +184,25 @@ function Sidebar(props) {
                         </Link>
                         <Link to={`${path.ORDER_CANCELLED}`} class="collapse-item" style={{ cursor: 'pointer' }}>
                             Đơn đã bị hủy
+                        </Link>
+                    </div>
+                </div>
+            </li>
+            <hr class="sidebar-divider" />
+
+            <div class="sidebar-heading">
+                Thống kê
+            </div>
+            <li class="nav-item">
+                <div class="nav-link collapsed" style={{ cursor: 'pointer' }} id="menu-title-6" onClick={() => handleToggle('menu-title-7')}>
+                    <i class="fa-regular fa-pen-to-square"></i>
+                    <span>Quản lý thống kê</span>
+                </div>
+                <div class="collapse" id="submenu-title-7">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Thao tác:</h6>
+                        <Link to={`${path.CHART}`} class="collapse-item" style={{ cursor: 'pointer' }}>
+                            Thống kê sản phẩm
                         </Link>
                     </div>
                 </div>
